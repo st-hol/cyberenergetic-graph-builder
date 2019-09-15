@@ -2,10 +2,12 @@ import pandas as pd
 import math
 import datetime
 
-def checkIsNan(x):
+
+def check_is_nan(x):
     if type(x) is datetime.datetime:
         return False
     return math.isnan(x)
+
 
 def flatten_list(l):
     flat_list = []
@@ -13,6 +15,7 @@ def flatten_list(l):
         for item in sublist:
             flat_list.append(item)
     return flat_list
+
 
 def read_xml_from_single_report(path):
     all_data_map = {}
@@ -41,8 +44,9 @@ def read_xml_from_single_report(path):
     all_data_map["hhh"] = (flatten_list(hhh.values))
 
     extend_with_full_date(all_data_map, path)
-    #print(all_data_map)
+    # print(all_data_map)
     return all_data_map
+
 
 def extend_with_full_date(all_data_map, path):
     all_data_map["fullDate"] = []
@@ -52,6 +56,7 @@ def extend_with_full_date(all_data_map, path):
         month = month.replace(".", "")
         day = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=utc.hour, minute=utc.minute)
         all_data_map["fullDate"].append(day)
+
 
 def read_xml_all_months():
     months_in_year = 12
@@ -89,13 +94,26 @@ def read_xml_all_months():
 
     return all_data_from_all_reports
 
+
+def restore_lost_data(l):
+    restored = l.copy()
+    if all(check_is_nan(v) is True for v in l):
+        restored = [0 for i in l]
+        return restored
+    else:
+        for i in range(len(l)):
+            if check_is_nan(l[i]):
+                restored[i] = interpolate(l, i)
+        return restored
+
+
 def interpolate(l, index):
     middle_ind = int(len(l)/2)
     if index > middle_ind:
         return_value = l[len(l)-1]
         i = middle_ind
         while i < len(l):
-            if checkIsNan(l[i]):
+            if check_is_nan(l[i]):
                 i += 1
                 continue
             else:
@@ -105,25 +123,13 @@ def interpolate(l, index):
         return_value = l[0]
         i = 0
         while i < middle_ind:
-            if checkIsNan(l[i]):
+            if check_is_nan(l[i]):
                 i += 1
                 continue
             else:
                 return_value = l[i]
                 break
     return return_value
-
-
-def restore_lost_data(l):
-    restored = l.copy()
-    if all(checkIsNan(v) is True for v in l):
-        restored = [0 for i in l]
-        return restored
-    else:
-        for i in range(len(l)):
-            if checkIsNan(l[i]):
-                restored[i] = interpolate(l, i)
-        return restored
 
 
 
