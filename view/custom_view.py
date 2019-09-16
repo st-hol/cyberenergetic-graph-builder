@@ -22,4 +22,4 @@ def obtain_menu(container):
 
 def configure_window_view(app):
     tk.Tk.iconbitmap(app, default="favicon.ico")
-    tk.Tk.wm_title(app, "Кіберенергетичні системи. Програма для дослідження даних та побудови графіків.")
+    tk.Tk.wm_title(app, "Побудова графіків та дослідження графіків.")

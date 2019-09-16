@@ -1,20 +1,9 @@
 import pandas as pd
 import math
+import numbers
 import datetime
 
-
-def check_is_nan(x):
-    if type(x) is datetime.datetime:
-        return False
-    return math.isnan(x)
-
-
-def flatten_list(l):
-    flat_list = []
-    for sublist in l:
-        for item in sublist:
-            flat_list.append(item)
-    return flat_list
+import services.tab1_service as tab1_service
 
 
 def read_xml_from_single_report(path):
@@ -31,38 +20,30 @@ def read_xml_from_single_report(path):
     U = pd.DataFrame(data, columns=['U'])
     PPP = pd.DataFrame(data, columns=['PPP'])
     hhh = pd.DataFrame(data, columns=['hhh'])
-    all_data_map["days"] = (flatten_list(days_of_month.values))
-    all_data_map["UTC"] = (flatten_list(UTC.values))
-    all_data_map["T"] = (flatten_list(T.values))
-    all_data_map["dd"] = (flatten_list(dd.values))
-    all_data_map["FF"] = (flatten_list(FF.values))
-    all_data_map["ww"] = (flatten_list(ww.values))
-    all_data_map["N"] = (flatten_list(N.values))
-    all_data_map["vv"] = (flatten_list(vv.values))
-    all_data_map["U"] = (flatten_list(U.values))
-    all_data_map["PPP"] = (flatten_list(PPP.values))
-    all_data_map["hhh"] = (flatten_list(hhh.values))
+    all_data_map["days"] = flatten_list(days_of_month.values)
+    all_data_map["UTC"] = flatten_list(UTC.values)
+    all_data_map["T"] = flatten_list(T.values)
+    all_data_map["dd"] = flatten_list(dd.values)
+    all_data_map["FF"] = flatten_list(FF.values)
+    all_data_map["ww"] = flatten_list(ww.values)
+    all_data_map["N"] = flatten_list(N.values)
+    all_data_map["vv"] = flatten_list(vv.values)
+    all_data_map["U"] = flatten_list(U.values)
+    all_data_map["PPP"] = flatten_list(PPP.values)
+    all_data_map["hhh"] = flatten_list(hhh.values)
 
-    extend_with_full_date(all_data_map, path)
-    # print(all_data_map)
+    all_data_map["fullDate"] = tab1_service.map_full_datetime(all_data_map, path)
+
     return all_data_map
-
-
-def extend_with_full_date(all_data_map, path):
-    all_data_map["fullDate"] = []
-    for day, utc in zip(all_data_map["days"], all_data_map["UTC"]):
-        year = path[8:12]
-        month = path[13:15]
-        month = month.replace(".", "")
-        day = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=utc.hour, minute=utc.minute)
-        all_data_map["fullDate"].append(day)
 
 
 def read_xml_all_months():
     months_in_year = 12
     pattern = r'xlsdata/2012-{}.xlsx'
     paths = [pattern.format(i+1) for i in range(months_in_year)]
-    all_data_from_all_reports = {}
+
+    all_data_from_all_reports = dict()
+
     all_data_from_all_reports["days"] = []
     all_data_from_all_reports["UTC"] = []
     all_data_from_all_reports["T"] = []
@@ -93,6 +74,23 @@ def read_xml_all_months():
         all_data_from_all_reports["fullDate"].extend(all_data_from_current_report["fullDate"])
 
     return all_data_from_all_reports
+
+
+def check_is_nan(x):
+    if isinstance(x, datetime.datetime):
+        return False
+    if isinstance(x, numbers.Number):
+        return math.isnan(x)
+    if isinstance(x, str):
+        return x == ""
+
+
+def flatten_list(l):
+    flat_list = []
+    for sublist in l:
+        for item in sublist:
+            flat_list.append(item)
+    return flat_list
 
 
 def restore_lost_data(l):
@@ -142,6 +140,17 @@ def interpolate(l, index):
 
 
 
+
+
+
+# def extend_with_full_date(all_data_map, path):
+#     all_data_map["fullDate"] = []
+#     for day, utc in zip(all_data_map["days"], all_data_map["UTC"]):
+#         year = path[8:12]
+#         month = path[13:15]
+#         month = month.replace(".", "")
+#         day = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=utc.hour, minute=utc.minute)
+#         all_data_map["fullDate"].append(day)
 
 
 
