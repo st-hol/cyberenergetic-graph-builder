@@ -9,13 +9,20 @@ import tabs.router_page as router
 import services.tab1_service as tab1_service
 import services.common_service as my_service
 
+#1
 temperature_graph_fig = Figure()
 temperature_graph_plt = temperature_graph_fig.add_subplot(111)
 
+#2
 temperature_regime_duration_graph_fig = Figure()
 temperature_regime_duration_graph_plt = temperature_regime_duration_graph_fig.add_subplot(111)
 
+#3
 windrose_graph_fig = Figure(figsize=(6, 4), dpi=100)
+
+#4
+wind_duration_graph_fig = Figure()
+wind_duration_graph_plt = wind_duration_graph_fig.add_subplot(111)
 
 
 def animate_temperature_graph(i):
@@ -27,7 +34,7 @@ def animate_temperature_graph(i):
 
 
 def animate_temperature_duration_graph(i):
-    map_t_freq = tab1_service.map_temperature_frequency(router.all_data_map)
+    map_t_freq = tab1_service.map_temperature_duration(router.all_data_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
     temperature_regime_duration_graph_plt.clear()
@@ -52,6 +59,14 @@ def animate_windrose_graph(i):
     wa.set_legend()
 
 
+def animate_wind_duration_graph(i):
+    map_t_freq = tab1_service.map_wind_duration(router.all_data_map)
+    xs = list(map_t_freq.keys())
+    ys = list(map_t_freq.values())
+    wind_duration_graph_plt.clear()
+    wind_duration_graph_plt.bar(xs, ys)
+
+
 class Tab1Page(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -65,9 +80,13 @@ class Tab1Page(tk.Frame):
         graph2_btn = ttk.Button(self, text="Тривалість температурних режимів",
                                 command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
         graph2_btn.pack()
-        graph3_btn = ttk.Button(self, text="Троянда вітрів ",
+        graph3_btn = ttk.Button(self, text="Троянда вітрів",
                              command=lambda: controller.show_frame(Tab1Graph3_WindRose))
         graph3_btn.pack()
+        graph4_btn = ttk.Button(self, text="Тривалість режимів вітрової активності",
+                             command=lambda: controller.show_frame(Tab1Graph4_TemperatureDuration))
+        graph4_btn.pack()
+
 
         button_exit = ttk.Button(self, text="на головну",
                                  command=lambda: controller.show_frame(router.WelcomePage))
@@ -129,6 +148,22 @@ class Tab1Graph3_WindRose(tk.Frame):
         canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
+class Tab1Graph4_TemperatureDuration(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
+        label.pack(pady=10, padx=10)
+
+        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
+                             command=lambda: controller.show_frame(router.WelcomePage))
+        button1.pack()
+
+        canvas = FigureCanvasTkAgg(wind_duration_graph_fig, self)
+        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+        toolbar = NavigationToolbar2Tk(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
 
