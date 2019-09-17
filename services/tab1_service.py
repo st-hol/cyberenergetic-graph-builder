@@ -31,13 +31,22 @@ def map_speed_to_scale_one(wind_speed_list):
     return result
 
 
-def map_temperature_frequency(all_data_map):
+def map_temperature_duration(all_data_map):
     distinct_temperatures = list(set(all_data_map["T"]))
     map_t_freq = dict.fromkeys(distinct_temperatures, 0)
     for t in all_data_map["T"]:
         map_t_freq[t] += 1
     map_t_freq = {k: map_t_freq[k] for k in map_t_freq if not math.isnan(k)}
     return map_t_freq
+
+
+def map_wind_duration(all_data_map):
+    distinct_temperatures = list(set(all_data_map["FF"]))
+    map_wind_freq = dict.fromkeys(distinct_temperatures, 0)
+    for w in all_data_map["FF"]:
+        map_wind_freq[w] += 1
+    map_wind_freq = {k: map_wind_freq[k] for k in map_wind_freq if not math.isnan(k)}
+    return map_wind_freq
 
 
 def map_full_datetime(all_data_map, path):
@@ -54,6 +63,37 @@ def map_full_datetime(all_data_map, path):
                                 day=int(day), hour=utc.hour, minute=utc.minute)
         all_dates.append(day)
     return all_dates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def map_full_datetime(all_data_map):
 #     days = my_service.restore_lost_data(all_data_map["days"])
