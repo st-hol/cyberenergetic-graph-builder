@@ -19,6 +19,7 @@ def read_csv(path=r'xlsdata/_csv727796TY.csv'):
     all_data_map["time"] = times.values
     all_data_map["etrn"] = etrn.values
 
+    all_data_map["fullDate"] = tab1_service.map_full_datetime_from_date_and_time(all_data_map)
     return all_data_map
 
 
@@ -120,6 +121,27 @@ def flatten_list(l):
     return flat_list
 
 
+def check_is_nan_for_muni(x):
+    if isinstance(x, datetime.datetime):
+        return False
+    if isinstance(x, numbers.Number):
+        return math.isnan(x) or x == 0
+    if isinstance(x, str):
+        return x == "" or x == "0"
+
+
+def restore_lost_data_for_muni(l):
+    restored = l.copy()
+    if all(check_is_nan_for_muni(v) is True for v in l):
+        restored = [0 for i in l]
+        return restored
+    else:
+        for i in range(len(l)):
+            if check_is_nan_for_muni(l[i]):
+                restored[i] = interpolate_for_muni(l, i)
+        return restored
+
+
 def restore_lost_data(l):
     restored = l.copy()
     if all(check_is_nan(v) is True for v in l):
@@ -155,6 +177,47 @@ def interpolate(l, index):
                 return_value = l[i]
                 break
     return return_value
+
+
+def interpolate_for_muni(l, index):
+    middle_ind = int(len(l) / 2)
+    if index > middle_ind:
+        return_value = l[len(l) - 1]
+        i = middle_ind
+        while i < len(l):
+            if check_is_nan_for_muni(l[i]):
+                i += 1
+                continue
+            else:
+                return_value = l[i]
+                break
+    else:
+        return_value = l[0]
+        i = 0
+        while i < middle_ind:
+            if check_is_nan_for_muni(l[i]):
+                i += 1
+                continue
+            else:
+                return_value = l[i]
+                break
+    return return_value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def extend_with_full_date(all_data_map, path):
 #     all_data_map["fullDate"] = []

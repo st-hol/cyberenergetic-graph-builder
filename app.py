@@ -28,7 +28,9 @@ class Application(tk.Tk):
                       tab1_graphs.Tab1Graph1_TemperatureCond,
                       tab1_graphs.Tab1Graph2_TemperatureDuration,
                       tab1_graphs.Tab1Graph3_WindRose,
-                      tab1_graphs.Tab1Graph4_TemperatureDuration)
+                      tab1_graphs.Tab1Graph4_TemperatureDuration,
+                      tab1_graphs.Tab1Graph5_SolarInsolation,
+                      tab1_graphs.Tab1Graph6_SolarActivityDuration)
 
         for F in all_frames:
             frame = F(container, self)
@@ -42,9 +44,6 @@ class Application(tk.Tk):
 
 
 if __name__ == '__main__':
-
-    my_service.read_csv()
-
     app = Application()
     app.geometry("1280x720")
     temperature_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_graph_fig,
@@ -56,4 +55,8 @@ if __name__ == '__main__':
                                                              interval=100000)
     wind_graph_ani = animation.FuncAnimation(tab1_graphs.wind_duration_graph_fig,
                                              tab1_graphs.animate_wind_duration_graph, interval=100000)
+    solar_insolation_graph_ani = animation.FuncAnimation(tab1_graphs.solar_insolation_graph_fig,
+                                                    tab1_graphs.animate_insolation_graph, interval=100000)
+    solar_activity_duration_graph_ani = animation.FuncAnimation(tab1_graphs.solar_duration_graph_fig,
+                                                         tab1_graphs.animate_solar_activity_duration_graph, interval=100000)
     app.mainloop()

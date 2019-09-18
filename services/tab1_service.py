@@ -40,11 +40,13 @@ def map_temperature_duration(all_data_map):
     return map_t_freq
 
 
+
 def map_wind_duration(all_data_map):
     distinct_temperatures = list(set(all_data_map["FF"]))
+
     map_wind_freq = dict.fromkeys(distinct_temperatures, 0)
     for w in all_data_map["FF"]:
-        map_wind_freq[w] += 1
+        map_wind_freq[w] += 0.5 #30min => /2 =>> hour
     map_wind_freq = {k: map_wind_freq[k] for k in map_wind_freq if not math.isnan(k)}
     return map_wind_freq
 
@@ -64,6 +66,39 @@ def map_full_datetime(all_data_map, path):
         all_dates.append(day)
     return all_dates
 
+
+def map_full_datetime_from_date_and_time(all_data_map):
+    dates = my_service.restore_lost_data(all_data_map["date"])
+    times = my_service.restore_lost_data(all_data_map["time"])
+
+    all_dates = []
+    for date_str, time_str in zip(dates, times):
+        date_object = parse_date(date_str)
+        time_object = parse_time(time_str)
+        day = datetime.datetime(year=int(date_object.year), month=int(date_object.month),
+                                day=int(date_object.day), hour=time_object.hour, minute=time_object.minute)
+        all_dates.append(day)
+
+    return all_dates
+
+
+def parse_date(date_str):
+    return datetime.datetime.strptime(date_str, '%m/%d/%Y').date()
+
+
+def parse_time(time_str):
+    if time_str == '24:00':
+        time_str = '00:00'
+    return datetime.datetime.strptime(time_str, '%H:%M').time()
+
+
+def map_solar_activity_duration(cut_bank_muni_ap_map):
+    distinct_insolation = my_service.restore_lost_data_for_muni(list(set(cut_bank_muni_ap_map["etrn"])))
+    map_t_freq = dict.fromkeys(distinct_insolation, 0)
+    for t in my_service.restore_lost_data_for_muni(cut_bank_muni_ap_map["etrn"]):
+        map_t_freq[t] += 1
+    map_t_freq = {k: map_t_freq[k] for k in map_t_freq if not math.isnan(k)}
+    return map_t_freq
 
 
 

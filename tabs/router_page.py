@@ -8,6 +8,7 @@ import services.common_service as my_service
 
 all_data_map = my_service.read_xml_all_months()
 
+cut_bank_muni_ap_map = my_service.read_csv()
 
 class WelcomePage(tk.Frame):
     def __init__(self, parent, controller):
