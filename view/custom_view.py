@@ -1,8 +1,11 @@
 import tkinter as tk
 
-LARGE_FONT= ("Verdana", 12)
+LARGE_FONT = ("Verdana", 18)
 NORM_FONT = ("Helvetica", 10)
 SMALL_FONT = ("Helvetica", 8)
+CONSOLE_FONT_12 = ("Lucida Console", 12)
+CONSOLE_FONT_16 = ("Lucida Console", 16)
+
 
 def obtain_container(app):
     container = tk.Frame(app)

@@ -2,6 +2,9 @@ import pandas as pd
 import math
 import numbers
 import datetime
+import os
+import re
+
 
 import services.tab1_service as tab1_service
 
@@ -55,13 +58,18 @@ def read_xml_from_single_report(path):
     return all_data_map
 
 
+# months_in_year = 12
 def read_xml_all_months(report_city="kyiv", report_year="2012"):
-    months_in_year = 12
-    pattern = r'xlsdata/' + report_city + "-" + report_year + '-{}.xlsx'
-    paths = [pattern.format(i + 1) for i in range(months_in_year)]
+    dir_name = r'xlsdata/'
+    paths = [dir_name + name for name in os.listdir(dir_name)
+                      if os.path.isfile(os.path.join(dir_name, name))
+                      and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)]
+    n_of_files = len(paths)
+    print("Number of Files using listdir method#2 :", n_of_files)
+    paths.sort(key=len)
+    print(paths)
 
     all_data_from_all_reports = dict()
-
     all_data_from_all_reports["days"] = []
     all_data_from_all_reports["UTC"] = []
     all_data_from_all_reports["T"] = []
@@ -197,6 +205,14 @@ def interpolate_for_muni(l, index):
 def map_to_logarithmic(l):
     result = list(map(lambda x: float(math.log(x)), l))
     return result
+
+
+
+
+    # pattern = dir_name + report_city + "-" + report_year + '-{}.xlsx'
+    # paths = [pattern.format(i + 1) for i in range(n_of_files)]
+
+
 
 # def read_by_lines():
 #     filename = r'xlsdata/data.txt'

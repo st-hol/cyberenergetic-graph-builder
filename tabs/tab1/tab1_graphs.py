@@ -150,31 +150,59 @@ class Tab1Page(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text=("""\nОберіть процес моделювання:\n\n"""), font=my_view.LARGE_FONT)
+        label = tk.Label(self, text=("""\nОберіть процес моделювання:\n\n"""), font=my_view.CONSOLE_FONT_16)
         label.pack(pady=5, padx=5)
         label.configure(background='black', foreground='lightblue')
 
-        graph1_btn = ttk.Button(self, text="Температурні умови",
-                                command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
+        graph1_btn = tk.Button(self, text="Температурні умови",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
+        graph1_btn.config(font=my_view.CONSOLE_FONT_12)
         graph1_btn.pack(pady=5, padx=5)
-        graph2_btn = ttk.Button(self, text="Тривалість температурних режимів",
-                                command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
+        graph2_btn = tk.Button(self, text="Тривалість температурних режимів",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
+        graph2_btn.config(font=my_view.CONSOLE_FONT_12)
         graph2_btn.pack(pady=5, padx=5)
-        graph3_btn = ttk.Button(self, text="Троянда вітрів",
-                                command=lambda: controller.show_frame(Tab1Graph3_WindRose))
+        graph3_btn = tk.Button(self, text="Троянда вітрів",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph3_WindRose))
+        graph3_btn.config(font=my_view.CONSOLE_FONT_12)
         graph3_btn.pack(pady=5, padx=5)
-        graph4_btn = ttk.Button(self, text="Тривалість режимів вітрової активності",
-                                command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
+        graph4_btn = tk.Button(self, text="Тривалість режимів вітрової активності",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
+        graph4_btn.config(font=my_view.CONSOLE_FONT_12)
         graph4_btn.pack(pady=5, padx=5)
-        graph5_btn = ttk.Button(self, text="Інтенсивність сонячної інсоляції",
-                                command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
+        graph5_btn = tk.Button(self, text="Інтенсивність сонячної інсоляції",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
+        graph5_btn.config(font=my_view.CONSOLE_FONT_12)
         graph5_btn.pack(pady=5, padx=5)
-        graph6_btn = ttk.Button(self, text="Тривалість режимів сонячної активності",
-                                command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
+        graph6_btn = tk.Button(self, text="Тривалість режимів сонячної активності",
+                               width=40, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
+        graph6_btn.config(font=my_view.CONSOLE_FONT_12)
         graph6_btn.pack(pady=5, padx=5)
 
-        button_exit = ttk.Button(self, text="на головну",
-                                 command=lambda: controller.show_frame(router.WelcomePage))
+        button_exit = tk.Button(self, text="на головну",
+                                width=40, bg='lightgreen', fg='blue', relief='flat',
+                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                highlightbackground="#37d3ff", borderwidth=4,
+                                command=lambda: controller.show_frame(router.WelcomePage))
+        button_exit.config(font=my_view.CONSOLE_FONT_12)
         button_exit.pack(pady=20, padx=20)
 
 
@@ -218,12 +246,12 @@ def form_tab1_subtab(frame, controller, figure):
     # label = tk.Label(frame, text="Змодельовані дані:", font=my_view.LARGE_FONT)
     # label.pack(pady=10, padx=10)
 
-    button_to_main = ttk.Button(frame, text="на головну",
-                                command=lambda: controller.show_frame(router.WelcomePage))
+    button_to_main = tk.Button(frame, text="на головну", width=40,
+                               command=lambda: controller.show_frame(router.WelcomePage))
     button_to_main.pack()
 
-    button_go_back = ttk.Button(frame, text="назад",
-                                command=lambda: controller.show_frame(Tab1Page))
+    button_go_back = tk.Button(frame, text="назад", width=40,
+                               command=lambda: controller.show_frame(Tab1Page))
     button_go_back.pack()
 
     canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
@@ -233,21 +261,8 @@ def form_tab1_subtab(frame, controller, figure):
     toolbar.update()
     canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # def supply_val():
+
 #     return [1, 2], [12, 41]
 # def animate_temperature_graph(i):
 #     xs, ys = supply_val()
