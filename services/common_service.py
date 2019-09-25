@@ -5,7 +5,6 @@ import datetime
 import os
 import re
 
-
 import services.tab1_service as tab1_service
 
 
@@ -58,15 +57,19 @@ def read_xml_from_single_report(path):
     return all_data_map
 
 
-# months_in_year = 12
-def read_xml_all_months(report_city="kyiv", report_year="2012"):
+def obtain_xls_files_from_directory():
     dir_name = r'xlsdata/'
     paths = [dir_name + name for name in os.listdir(dir_name)
                       if os.path.isfile(os.path.join(dir_name, name))
                       and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)]
+    paths.sort(key=len)
+    return paths
+
+# months_in_year = 12
+def read_xml_all_months():
+    paths = obtain_xls_files_from_directory()
     n_of_files = len(paths)
     print("Number of Files using listdir method#2 :", n_of_files)
-    paths.sort(key=len)
     print(paths)
 
     all_data_from_all_reports = dict()

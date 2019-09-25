@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import re
 
 import view.custom_view as my_view
 import tabs.tab1.tab1_graphs as tab1_graphs
@@ -26,7 +27,7 @@ class PreWelcomePage(tk.Frame):
                             width=40, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
-                            command=lambda: controller.show_frame(WelcomePage))
+                            command=lambda: controller.show_frame(DataInfoPage))
         button1.config(font=my_view.CONSOLE_FONT_16)
         button1.pack(pady=50, padx=50)
 
@@ -56,8 +57,51 @@ class WelcomePage(tk.Frame):
                             width=40, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
-                             command=lambda: controller.show_frame(tab1_graphs.Tab1Page))
+                            command=lambda: controller.show_frame(WelcomePage))
         button1.config(font=my_view.CONSOLE_FONT_12)
+        button1.pack(pady=5, padx=5)
+        button_exit = tk.Button(self, text="вихід",
+                                width=40, bg='red', fg='black', relief='flat',
+                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                highlightbackground="#37d3ff", borderwidth=4,
+                                command=quit)
+        button_exit.config(font=my_view.CONSOLE_FONT_12)
+        button_exit.pack(pady=20, padx=20)
+
+
+class DataInfoPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        paths = my_service.obtain_xls_files_from_directory()
+        paths = [path[8:] for path in paths]
+        filenames_list = ", ".join([path[:-5] for path in paths])
+        city_name_search_res = re.search(r'(\D)+-', paths[0])
+        city_name = city_name_search_res.group(0).strip('-')
+        year_name_search_res = re.search(r'-(\d)+-', paths[0])
+        year_name = year_name_search_res.group(0).strip('-')
+        monthnames_list = ", ".join([re.search(r'-(\d)+\.', month)
+                                    .group(0)
+                                    .strip('-')
+                                    .strip('.') for month in paths])
+
+        label = tk.Label(self, text=("""\nДані були зчитані з наступних файлів.
+        \n{}
+        \nДля міста: {}
+        \nДля року: {}
+        \nДля місяців: {}
+        \nЗауважте, що втрачені комірки були відновлені програмно.
+        """.format(filenames_list, city_name, year_name, monthnames_list)),
+                         font=my_view.CONSOLE_FONT_10)
+        label.pack(pady=10, padx=10)
+        label.configure(background='black', foreground='green')
+
+        button1 = tk.Button(self, text="Я ознайомився і хочу продовжити",
+                            width=40, bg='lightgreen', fg='blue', relief='flat',
+                            bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                            highlightbackground="#37d3ff", borderwidth=4,
+                            command=lambda: controller.show_frame(tab1_graphs.Tab1Page))
+        button1.config(font=my_view.CONSOLE_FONT_16)
         button1.pack(pady=5, padx=5)
         button_exit = tk.Button(self, text="вихід",
                                 width=40, bg='red', fg='black', relief='flat',

@@ -22,6 +22,7 @@ class Application(tk.Tk):
 
         all_frames = (welcome.PreWelcomePage,
                       welcome.WelcomePage,
+                      welcome.DataInfoPage,
                       tab1_graphs.Tab1Page,
                       tab1_graphs.Tab1Graph1_TemperatureCond,
                       tab1_graphs.Tab1Graph2_TemperatureDuration,

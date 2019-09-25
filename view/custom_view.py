@@ -3,6 +3,7 @@ import tkinter as tk
 LARGE_FONT = ("Verdana", 18)
 NORM_FONT = ("Helvetica", 10)
 SMALL_FONT = ("Helvetica", 8)
+CONSOLE_FONT_10 = ("Lucida Console", 10)
 CONSOLE_FONT_12 = ("Lucida Console", 12)
 CONSOLE_FONT_16 = ("Lucida Console", 16)
 
