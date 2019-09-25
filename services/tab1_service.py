@@ -1,5 +1,7 @@
 import datetime
 import math
+
+from collections import Counter
 import pandas as pd
 import services.common_service as my_service
 
@@ -40,15 +42,24 @@ def map_temperature_duration(all_data_map):
     return map_t_freq
 
 
-
 def map_wind_duration(all_data_map):
     distinct_temperatures = list(set(all_data_map["FF"]))
 
     map_wind_freq = dict.fromkeys(distinct_temperatures, 0)
     for w in all_data_map["FF"]:
-        map_wind_freq[w] += 0.5 #30min => /2 =>> hour
+        map_wind_freq[w] += 0.5  # 30min => /2 =>> hour
     map_wind_freq = {k: map_wind_freq[k] for k in map_wind_freq if not math.isnan(k)}
     return map_wind_freq
+
+
+def map_ws_by_frequency(l):
+    c = Counter(l)
+    stats_per_item = [(i, c[i] / len(l) * 100.0) for i, count in c.most_common()]
+    result_map = {}
+    for zipped in stats_per_item:
+        if int(zipped[1]) != 0:
+            result_map[zipped[0]] = int(zipped[1])
+    return result_map
 
 
 def map_full_datetime(all_data_map, path):
@@ -58,8 +69,8 @@ def map_full_datetime(all_data_map, path):
     all_dates = []
 
     for day, utc in zip(days, UTCs):
-        year = path[8:12]
-        month = path[13:15]
+        year = path[13:17]
+        month = path[18:20]
         month = month.replace(".", "")
         day = datetime.datetime(year=int(year), month=int(month),
                                 day=int(day), hour=utc.hour, minute=utc.minute)
@@ -99,25 +110,6 @@ def map_solar_activity_duration(cut_bank_muni_ap_map):
         map_t_freq[t] += 1
     map_t_freq = {k: map_t_freq[k] for k in map_t_freq if not math.isnan(k)}
     return map_t_freq
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

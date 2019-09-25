@@ -11,245 +11,237 @@ import tabs.router_page as router
 import services.tab1_service as tab1_service
 import services.common_service as my_service
 
-#1
+# 1
 temperature_graph_fig = Figure()
-temperature_graph_plt = temperature_graph_fig.add_subplot(111)
+temperature_graph_ax = temperature_graph_fig.add_subplot(111)
 
-#2
+# 2
 temperature_regime_duration_graph_fig = Figure()
-temperature_regime_duration_graph_plt = temperature_regime_duration_graph_fig.add_subplot(111)
+temperature_regime_duration_graph_ax = temperature_regime_duration_graph_fig.add_subplot(111)
 
-#3
+# 3
 windrose_graph_fig = Figure(figsize=(6, 4), dpi=100)
+windrose_graph_ax = windrose_graph_fig.add_subplot(111)
 
-#4
+# 4
 wind_duration_graph_fig = Figure()
-wind_duration_graph_plt = wind_duration_graph_fig.add_subplot(111)
+wind_duration_graph_ax = wind_duration_graph_fig.add_subplot(111)
 
-#5
+# 5
 solar_insolation_graph_fig = Figure()
-solar_insolation_graph_plt = solar_insolation_graph_fig.add_subplot(111)
+solar_insolation_graph_ax = solar_insolation_graph_fig.add_subplot(111)
 
-#5
+# 6
 solar_duration_graph_fig = Figure()
-solar_duration_graph_plt = solar_duration_graph_fig.add_subplot(111)
+solar_duration_graph_ax = solar_duration_graph_fig.add_subplot(111)
 
 
 def animate_temperature_graph(i):
     xs = my_service.restore_lost_data(router.all_data_map['fullDate'])
     ys = my_service.restore_lost_data(router.all_data_map['T'])
     date = [item.date() for item in xs]
-    temperature_graph_plt.clear()
-    temperature_graph_plt.plot_date(date, ys, linestyle='-', linewidth='0', markersize=3)
+    temperature_graph_ax.clear()
+    temperature_graph_ax.set(xlabel='дата', ylabel='t ℃',
+                             title='Температурні умови')
+    temperature_graph_ax.grid()
+    temperature_graph_ax.plot_date(date, ys,
+                                   linestyle='-', linewidth='0.3',
+                                   markersize=1,
+                                   label="t ℃")
 
 
 def animate_temperature_duration_graph(i):
     map_t_freq = tab1_service.map_temperature_duration(router.all_data_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
-    temperature_regime_duration_graph_plt.clear()
+    temperature_regime_duration_graph_ax.clear()
 
-    # table_subplot = temperature_regime_duration_graph_plt.subplot2grid((1, 4), (0, 3))
-
-    final_data=[xs, ys]
-
-    table = temperature_regime_duration_graph_plt.table(cellText=final_data, loc='top', cellLoc='center',
-                                                        bbox=[0.0, -0.45, 1, .28])
+    final_data = [xs, ys]
+    table = temperature_regime_duration_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
+                                                       bbox=[0.0, -0.45, 1, .28])
     temperature_regime_duration_graph_fig.subplots_adjust(bottom=0.3)
     table.auto_set_font_size(False)
     table.set_fontsize(5)
     # table.auto_set_column_width((-1, 0, 1, 2, 3))
 
     for (row, col), cell in table.get_celld().items():
-        if (row == 0):
+        if row == 0:
             cell.set_text_props(fontproperties=FontProperties(weight='normal', size=4))
 
     for key, cell in table.get_celld().items():
         cell.set_linewidth(0.1)
 
-    temperature_regime_duration_graph_plt.bar(xs, ys)
+    temperature_regime_duration_graph_ax.set(xlabel='t ℃', ylabel='год.',
+                                             title='Тривалість температурних режимів')
+    temperature_regime_duration_graph_ax.grid()
+    temperature_regime_duration_graph_ax.bar(xs, ys)
 
 
 def animate_windrose_graph(i):
-    # ws = np.random.random(500) * 6
-    # wd = np.random.random(500) * 360
-
     ws = my_service.restore_lost_data(router.all_data_map['FF'])
     wd = my_service.restore_lost_data(router.all_data_map['dd'])
 
-    ws = tab1_service.map_speed_to_scale_one(ws)
+    ws_scale_1 = tab1_service.map_speed_to_scale_one(ws)
     wd = tab1_service.map_compass_to_degrees(wd)
 
-    windrose_graph_fig.clear()
+    # hide axes
+    windrose_graph_fig.patch.set_visible(False)
+    windrose_graph_ax.axis('off')
+    windrose_graph_ax.axis('tight')
+
+    ws_frequency_map = tab1_service.map_ws_by_frequency(ws)
+    final_data = [list(ws_frequency_map.keys()), list(ws_frequency_map.values())]
+    table = windrose_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
+                                    rowLabels=[" м/с ", " % "], bbox=[0., 0., 0.23, .28])
+    windrose_graph_fig.subplots_adjust(bottom=0.6)
+    table.auto_set_font_size(False)
+    table.set_fontsize(7)
+    for (row, col), cell in table.get_celld().items():
+        if row == 0:
+            cell.set_text_props(fontproperties=FontProperties(weight='normal', size=7))
+    for key, cell in table.get_celld().items():
+        cell.set_linewidth(0.5)
+
+    # windrose_graph_fig.clear()
     rect = [0.1, 0.1, 0.8, 0.8]
     wa = WindroseAxes(windrose_graph_fig, rect)
     windrose_graph_fig.add_axes(wa)
-    wa.bar(wd, ws, normed=True, opening=0.8, edgecolor='white')
-    wa.set_legend()
+    windrose_graph_ax.grid()
+    wa.bar(wd, ws_scale_1, normed=True, opening=0.8, edgecolor='white')
+    # wa.set_legend()
+    wa.set_legend(title="інтенсивність", loc="upper right")
 
 
 def animate_wind_duration_graph(i):
     map_t_freq = tab1_service.map_wind_duration(router.all_data_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
-    wind_duration_graph_plt.clear()
-    wind_duration_graph_plt.bar(xs, ys)
+    wind_duration_graph_ax.clear()
+    wind_duration_graph_ax.set(xlabel='м/с', ylabel='год.',
+                               title='Тривалість режимів вітрової активності вітрів ')
+    wind_duration_graph_ax.grid()
+    wind_duration_graph_ax.bar(xs, ys)
 
 
 def animate_insolation_graph(i):
     xs = (router.cut_bank_muni_ap_map['fullDate'])
     ys = (router.cut_bank_muni_ap_map['etrn'])
     # date = [item.date() for item in xs]
-    solar_insolation_graph_plt.clear()
-    solar_insolation_graph_plt.bar(xs, ys, width=0.3)
+    solar_insolation_graph_ax.clear()
+    solar_insolation_graph_ax.set(xlabel='дата', ylabel='Вт/м²',
+                                  title='Інтенсивність сонячної інсоляції ')
+    solar_insolation_graph_ax.grid()
+    solar_insolation_graph_ax.bar(xs, ys, width=0.3)
 
 
 def animate_solar_activity_duration_graph(i):
     map_t_freq = tab1_service.map_solar_activity_duration(router.cut_bank_muni_ap_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
-    solar_duration_graph_plt.clear()
-    solar_duration_graph_plt.bar(xs, ys)
+    xs = my_service.map_to_logarithmic(xs)
+    solar_duration_graph_ax.clear()
+    solar_duration_graph_ax.set(xlabel='log Вт/м²', ylabel='год.',
+                                title='Тривалість режимів сонячної активності')
+    solar_duration_graph_ax.grid()
+    solar_duration_graph_ax.bar(xs, ys)
 
 
 class Tab1Page(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label = tk.Label(self, text=("""\nОберіть графік:\n"""), font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        label = tk.Label(self, text=("""\nОберіть процес моделювання:\n\n"""), font=my_view.LARGE_FONT)
+        label.pack(pady=5, padx=5)
+        label.configure(background='black', foreground='lightblue')
 
-        graph1_btn = ttk.Button(self, text="\nТемпературні умови\n",
-                             command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
-        graph1_btn.pack(pady=10, padx=10)
-        graph2_btn = ttk.Button(self, text="\nТривалість температурних режимів\n",
+        graph1_btn = ttk.Button(self, text="Температурні умови",
+                                command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
+        graph1_btn.pack(pady=5, padx=5)
+        graph2_btn = ttk.Button(self, text="Тривалість температурних режимів",
                                 command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
-        graph2_btn.pack(pady=10, padx=10)
-        graph3_btn = ttk.Button(self, text="\nТроянда вітрів\n",
-                             command=lambda: controller.show_frame(Tab1Graph3_WindRose))
-        graph3_btn.pack(pady=10, padx=10)
-        graph4_btn = ttk.Button(self, text="\nТривалість режимів вітрової активності\n",
-                             command=lambda: controller.show_frame(Tab1Graph4_TemperatureDuration))
-        graph4_btn.pack(pady=10, padx=10)
-        graph5_btn = ttk.Button(self, text="\nІнтенсивність сонячної інсоляції\n",
-                             command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
-        graph5_btn.pack(pady=10, padx=10)
-        graph6_btn = ttk.Button(self, text="\nТривалість режимів сонячної активності\n",
-                             command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
-        graph6_btn.pack(pady=10, padx=10)
+        graph2_btn.pack(pady=5, padx=5)
+        graph3_btn = ttk.Button(self, text="Троянда вітрів",
+                                command=lambda: controller.show_frame(Tab1Graph3_WindRose))
+        graph3_btn.pack(pady=5, padx=5)
+        graph4_btn = ttk.Button(self, text="Тривалість режимів вітрової активності",
+                                command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
+        graph4_btn.pack(pady=5, padx=5)
+        graph5_btn = ttk.Button(self, text="Інтенсивність сонячної інсоляції",
+                                command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
+        graph5_btn.pack(pady=5, padx=5)
+        graph6_btn = ttk.Button(self, text="Тривалість режимів сонячної активності",
+                                command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
+        graph6_btn.pack(pady=5, padx=5)
 
         button_exit = ttk.Button(self, text="на головну",
                                  command=lambda: controller.show_frame(router.WelcomePage))
-        button_exit.pack()
+        button_exit.pack(pady=20, padx=20)
 
 
 class Tab1Graph1_TemperatureCond(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
-
-        canvas = FigureCanvasTkAgg(temperature_graph_fig, self)
-        # canvas.show()
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        form_tab1_subtab(self, controller, temperature_graph_fig)
 
 
 class Tab1Graph2_TemperatureDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
-
-        canvas = FigureCanvasTkAgg(temperature_regime_duration_graph_fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        form_tab1_subtab(self, controller, temperature_regime_duration_graph_fig)
 
 
 class Tab1Graph3_WindRose(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
-
-        canvas = FigureCanvasTkAgg(windrose_graph_fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        form_tab1_subtab(self, controller, windrose_graph_fig)
 
 
-class Tab1Graph4_TemperatureDuration(tk.Frame):
+class Tab1Graph4_WindDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
-
-        canvas = FigureCanvasTkAgg(wind_duration_graph_fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        form_tab1_subtab(self, controller, wind_duration_graph_fig)
 
 
 class Tab1Graph5_SolarInsolation(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
-
-        canvas = FigureCanvasTkAgg(solar_insolation_graph_fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
-
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        form_tab1_subtab(self, controller, solar_insolation_graph_fig)
 
 
 class Tab1Graph6_SolarActivityDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="ГРАФІК", font=my_view.LARGE_FONT)
-        label.pack(pady=10, padx=10)
+        form_tab1_subtab(self, controller, solar_duration_graph_fig)
 
-        button1 = ttk.Button(self, text="НА ГОЛОВНУ",
-                             command=lambda: controller.show_frame(router.WelcomePage))
-        button1.pack()
 
-        canvas = FigureCanvasTkAgg(solar_duration_graph_fig, self)
-        canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+def form_tab1_subtab(frame, controller, figure):
+    # label = tk.Label(frame, text="Змодельовані дані:", font=my_view.LARGE_FONT)
+    # label.pack(pady=10, padx=10)
 
-        toolbar = NavigationToolbar2Tk(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    button_to_main = ttk.Button(frame, text="на головну",
+                                command=lambda: controller.show_frame(router.WelcomePage))
+    button_to_main.pack()
+
+    button_go_back = ttk.Button(frame, text="назад",
+                                command=lambda: controller.show_frame(Tab1Page))
+    button_go_back.pack()
+
+    canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
+    canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+
+    toolbar = NavigationToolbar2Tk(canvas, frame)
+    toolbar.update()
+    canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -262,11 +254,14 @@ class Tab1Graph6_SolarActivityDuration(tk.Frame):
 #     a.plot(xs, ys)
 
 
-
-
-
 # for line in a.lines:
 #     line.set_marker(None)
 
 
+# temperature_graph_ax.legend(bbox_to_anchor=(1,1.02,1,.102), loc=3,
+#                             ncol=2,borderaxespad=0)
+# temperature_graph_ax.set_title("te")
 
+
+# ws = np.random.random(500) * 6
+# wd = np.random.random(500) * 360
