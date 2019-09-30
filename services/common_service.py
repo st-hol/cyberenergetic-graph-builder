@@ -61,7 +61,8 @@ def obtain_xls_files_from_directory():
     dir_name = r'xlsdata/'
     paths = [dir_name + name for name in os.listdir(dir_name)
                       if os.path.isfile(os.path.join(dir_name, name))
-                      and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)]
+                      and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)
+                        and not name.startswith('~')]
     paths.sort(key=len)
     return paths
 

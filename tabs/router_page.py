@@ -6,8 +6,8 @@ import view.custom_view as my_view
 import tabs.tab1.tab1_graphs as tab1_graphs
 import services.common_service as my_service
 
-all_data_map = my_service.read_xml_all_months()
-cut_bank_muni_ap_map = my_service.read_csv()
+# all_data_map = my_service.read_xml_all_months()
+# cut_bank_muni_ap_map = my_service.read_csv()
 
 
 class PreWelcomePage(tk.Frame):

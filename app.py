@@ -47,17 +47,17 @@ if __name__ == '__main__':
     app = Application()
     app.geometry("1376x768")
     temperature_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_graph_fig,
-                                                    tab1_graphs.animate_temperature_graph, interval=100000)
+                                                    tab1_graphs.animate_temperature_graph, interval=10000)
     windrose_graph_ani = animation.FuncAnimation(tab1_graphs.windrose_graph_fig,
-                                                 tab1_graphs.animate_windrose_graph, interval=100000)
+                                                 tab1_graphs.animate_windrose_graph, interval=10000)
     temperature_duration_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_regime_duration_graph_fig,
                                                              tab1_graphs.animate_temperature_duration_graph,
-                                                             interval=100000)
+                                                             interval=10000)
     wind_graph_ani = animation.FuncAnimation(tab1_graphs.wind_duration_graph_fig,
-                                             tab1_graphs.animate_wind_duration_graph, interval=100000)
+                                             tab1_graphs.animate_wind_duration_graph, interval=10000)
     solar_insolation_graph_ani = animation.FuncAnimation(tab1_graphs.solar_insolation_graph_fig,
-                                                         tab1_graphs.animate_insolation_graph, interval=100000)
+                                                         tab1_graphs.animate_insolation_graph, interval=10000)
     solar_activity_duration_graph_ani = animation.FuncAnimation(tab1_graphs.solar_duration_graph_fig,
                                                                 tab1_graphs.animate_solar_activity_duration_graph,
-                                                                interval=100000)
+                                                                interval=10000)
     app.mainloop()

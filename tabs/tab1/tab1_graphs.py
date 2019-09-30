@@ -11,6 +11,21 @@ import tabs.router_page as router
 import services.tab1_service as tab1_service
 import services.common_service as my_service
 
+all_data_map = my_service.read_xml_all_months()
+cut_bank_muni_ap_map = my_service.read_csv()
+is_active = "NO_ONE_IS_ACTIVE_NOW"
+
+#data
+def update_all_data_map():
+    global all_data_map
+    all_data_map = my_service.read_xml_all_months()
+
+def update_cut_bank_muni_ap_map():
+    global cut_bank_muni_ap_map
+    cut_bank_muni_ap_map = my_service.read_csv()
+
+
+
 # 1
 temperature_graph_fig = Figure()
 temperature_graph_ax = temperature_graph_fig.add_subplot(111)
@@ -37,8 +52,14 @@ solar_duration_graph_ax = solar_duration_graph_fig.add_subplot(111)
 
 
 def animate_temperature_graph(i):
-    xs = my_service.restore_lost_data(router.all_data_map['fullDate'])
-    ys = my_service.restore_lost_data(router.all_data_map['T'])
+    global all_data_map
+    global is_active
+    print("a", is_active)
+    if is_active == "1_1":
+        update_all_data_map()
+
+    xs = my_service.restore_lost_data(all_data_map['fullDate'])
+    ys = my_service.restore_lost_data(all_data_map['T'])
     date = [item.date() for item in xs]
     temperature_graph_ax.clear()
     temperature_graph_ax.set(xlabel='дата', ylabel='t ℃',
@@ -51,7 +72,12 @@ def animate_temperature_graph(i):
 
 
 def animate_temperature_duration_graph(i):
-    map_t_freq = tab1_service.map_temperature_duration(router.all_data_map)
+    global all_data_map
+    global is_active
+    if is_active == "1_2":
+        update_all_data_map()
+
+    map_t_freq = tab1_service.map_temperature_duration(all_data_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
     temperature_regime_duration_graph_ax.clear()
@@ -78,8 +104,13 @@ def animate_temperature_duration_graph(i):
 
 
 def animate_windrose_graph(i):
-    ws = my_service.restore_lost_data(router.all_data_map['FF'])
-    wd = my_service.restore_lost_data(router.all_data_map['dd'])
+    global all_data_map
+    global is_active
+    if is_active == "1_3":
+        update_all_data_map()
+
+    ws = my_service.restore_lost_data(all_data_map['FF'])
+    wd = my_service.restore_lost_data(all_data_map['dd'])
 
     ws_scale_1 = tab1_service.map_speed_to_scale_one(ws)
     wd = tab1_service.map_compass_to_degrees(wd)
@@ -113,7 +144,12 @@ def animate_windrose_graph(i):
 
 
 def animate_wind_duration_graph(i):
-    map_t_freq = tab1_service.map_wind_duration(router.all_data_map)
+    global all_data_map
+    global is_active
+    if is_active == "1_4":
+        update_all_data_map()
+
+    map_t_freq = tab1_service.map_wind_duration(all_data_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
     wind_duration_graph_ax.clear()
@@ -124,8 +160,13 @@ def animate_wind_duration_graph(i):
 
 
 def animate_insolation_graph(i):
-    xs = (router.cut_bank_muni_ap_map['fullDate'])
-    ys = (router.cut_bank_muni_ap_map['etrn'])
+    global cut_bank_muni_ap_map
+    global is_active
+    if is_active == "1_5":
+        update_cut_bank_muni_ap_map()
+
+    xs = (cut_bank_muni_ap_map['fullDate'])
+    ys = (cut_bank_muni_ap_map['etrn'])
     # date = [item.date() for item in xs]
     solar_insolation_graph_ax.clear()
     solar_insolation_graph_ax.set(xlabel='дата', ylabel='Вт/м²',
@@ -135,16 +176,26 @@ def animate_insolation_graph(i):
 
 
 def animate_solar_activity_duration_graph(i):
-    map_t_freq = tab1_service.map_solar_activity_duration(router.cut_bank_muni_ap_map)
+    global cut_bank_muni_ap_map
+    global is_active
+    if is_active == "1_6":
+        update_cut_bank_muni_ap_map()
+
+    map_t_freq = tab1_service.map_solar_activity_duration(cut_bank_muni_ap_map)
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
-    xs = my_service.map_to_logarithmic(xs)
     solar_duration_graph_ax.clear()
     solar_duration_graph_ax.set(xlabel='log Вт/м²', ylabel='год.',
                                 title='Тривалість режимів сонячної активності')
     solar_duration_graph_ax.grid()
     solar_duration_graph_ax.bar(xs, ys)
 
+
+def display_graph_and_set_active(controller, frame, active):
+    global is_active
+    is_active = active
+    print("g", is_active)
+    controller.show_frame(frame)
 
 class Tab1Page(tk.Frame):
     def __init__(self, parent, controller):
@@ -158,42 +209,60 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph1_TemperatureCond,
+                                                                            "1_1"))
+                               # command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
         graph1_btn.config(font=my_view.CONSOLE_FONT_12)
         graph1_btn.pack(pady=5, padx=5)
         graph2_btn = tk.Button(self, text="Тривалість температурних режимів",
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph2_TemperatureDuration,
+                                                                            "1_2"))
+                               # command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
         graph2_btn.config(font=my_view.CONSOLE_FONT_12)
         graph2_btn.pack(pady=5, padx=5)
         graph3_btn = tk.Button(self, text="Троянда вітрів",
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph3_WindRose))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph3_WindRose,
+                                                                            "1_3"))
+                               # command=lambda: controller.show_frame(Tab1Graph3_WindRose))
         graph3_btn.config(font=my_view.CONSOLE_FONT_12)
         graph3_btn.pack(pady=5, padx=5)
         graph4_btn = tk.Button(self, text="Тривалість режимів вітрової активності",
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph4_WindDuration,
+                                                                            "1_4"))
+                               # command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
         graph4_btn.config(font=my_view.CONSOLE_FONT_12)
         graph4_btn.pack(pady=5, padx=5)
         graph5_btn = tk.Button(self, text="Інтенсивність сонячної інсоляції",
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph5_SolarInsolation,
+                                                                            "1_5"))
+                               # command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
         graph5_btn.config(font=my_view.CONSOLE_FONT_12)
         graph5_btn.pack(pady=5, padx=5)
         graph6_btn = tk.Button(self, text="Тривалість режимів сонячної активності",
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Graph6_SolarActivityDuration,
+                                                                            "1_6"))
+                               # command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
         graph6_btn.config(font=my_view.CONSOLE_FONT_12)
         graph6_btn.pack(pady=5, padx=5)
 
@@ -201,7 +270,10 @@ class Tab1Page(tk.Frame):
                                 width=40, bg='lightgreen', fg='blue', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
-                                command=lambda: controller.show_frame(router.WelcomePage))
+                                command=lambda: display_graph_and_set_active(controller,
+                                                                             router.WelcomePage,
+                                                                             "DISABLED"))
+                                # command=lambda: controller.show_frame(router.WelcomePage))
         button_exit.config(font=my_view.CONSOLE_FONT_12)
         button_exit.pack(pady=20, padx=20)
 
@@ -215,30 +287,40 @@ class Tab1Graph1_TemperatureCond(tk.Frame):
 class Tab1Graph2_TemperatureDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        global is_active
+        is_active = "1_2"
         form_tab1_subtab(self, controller, temperature_regime_duration_graph_fig)
 
 
 class Tab1Graph3_WindRose(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        global is_active
+        is_active = "1_3"
         form_tab1_subtab(self, controller, windrose_graph_fig)
 
 
 class Tab1Graph4_WindDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        global is_active
+        is_active = "1_4"
         form_tab1_subtab(self, controller, wind_duration_graph_fig)
 
 
 class Tab1Graph5_SolarInsolation(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        global is_active
+        is_active = "1_5"
         form_tab1_subtab(self, controller, solar_insolation_graph_fig)
 
 
 class Tab1Graph6_SolarActivityDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        global is_active
+        is_active = "1_6"
         form_tab1_subtab(self, controller, solar_duration_graph_fig)
 
 
@@ -247,11 +329,17 @@ def form_tab1_subtab(frame, controller, figure):
     # label.pack(pady=10, padx=10)
 
     button_to_main = tk.Button(frame, text="на головну", width=40,
-                               command=lambda: controller.show_frame(router.WelcomePage))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            router.WelcomePage,
+                                                                            "DISABLED"))
+                               # command=lambda: controller.show_frame(router.WelcomePage))
     button_to_main.pack()
 
     button_go_back = tk.Button(frame, text="назад", width=40,
-                               command=lambda: controller.show_frame(Tab1Page))
+                               command=lambda: display_graph_and_set_active(controller,
+                                                                            Tab1Page,
+                                                                            "DISABLED"))
+                               # command=lambda: controller.show_frame(Tab1Page))
     button_go_back.pack()
 
     canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
@@ -260,6 +348,10 @@ def form_tab1_subtab(frame, controller, figure):
     toolbar = NavigationToolbar2Tk(canvas, frame)
     toolbar.update()
     canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+
+
 
 # def supply_val():
 
