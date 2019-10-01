@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import math
 import numbers
 import datetime
@@ -7,10 +8,62 @@ import re
 
 import services.tab1_service as tab1_service
 
+start_date = 'UNDEFINED'
+end_date = 'UNDEFINED'
+start_date_muni = 'UNDEFINED'
+end_date_muni = 'UNDEFINED'
+
+
+def set_date_interval(start, end):
+    global start_date
+    global end_date
+    start_date = start
+    end_date = end
+    print(start_date)
+
+
+def set_date_muni_interval(start, end):
+    global start_date_muni
+    global end_date_muni
+    start_date_muni = start
+    end_date_muni = end
+    print(start_date)
+
+def read_csv_with_interval(report_city="kyiv"):
+    global start_date_muni
+    global end_date_muni
+    cut_bank_muni_ap_map = read_csv(report_city)
+
+    try:
+        start_index = np.where(cut_bank_muni_ap_map["date"] == start_date_muni)
+        if start_index[0].size == 0:
+            raise ValueError
+    except ValueError:
+        start_index = list()
+        start_index.append([0])
+
+    try:
+        end_index = np.where(cut_bank_muni_ap_map["date"] == end_date_muni)
+        if end_index[0].size == 0:
+            raise ValueError
+    except ValueError:
+        end_index = list()
+        end_index.append([-1])
+
+    start_index = start_index[0][0]
+    end_index = end_index[0][0]
+
+    cut_bank_muni_ap_map["date"] = cut_bank_muni_ap_map["date"][start_index:end_index]
+    cut_bank_muni_ap_map["time"] = cut_bank_muni_ap_map["time"][start_index:end_index]
+    cut_bank_muni_ap_map["etrn"] = cut_bank_muni_ap_map["etrn"][start_index:end_index]
+    cut_bank_muni_ap_map["fullDate"] = tab1_service.map_full_datetime_from_date_and_time(cut_bank_muni_ap_map)
+
+    return cut_bank_muni_ap_map
+
 
 # Date (MM/DD/YYYY),Time (HH:MM),ETR (W/m^2),ETRN (W/m^2),GHI (W/m^2),GHI source,GHI uncert (%),DNI (W/m^2),DNI source,DNI uncert (%),DHI (W/m^2),DHI source,DHI uncert (%),GH illum (lx),GH illum source,Global illum uncert (%),DN illum (lx),DN illum source,DN illum uncert (%),DH illum (lx),DH illum source,DH illum uncert (%),Zenith lum (cd/m^2),Zenith lum source,Zenith lum uncert (%),TotCld (tenths),TotCld source,TotCld uncert (code),OpqCld (tenths),OpqCld source,OpqCld uncert (code),Dry-bulb (C),Dry-bulb source,Dry-bulb uncert (code),Dew-point (C),Dew-point source,Dew-point uncert (code),RHum (%),RHum source,RHum uncert (code),Pressure (mbar),Pressure source,Pressure uncert (code),Wdir (degrees),Wdir source,Wdir uncert (code),Wspd (m/s),Wspd source,Wspd uncert (code),Hvis (m),Hvis source,Hvis uncert (code),CeilHgt (m),CeilHgt source,CeilHgt uncert (code),Pwat (cm),Pwat source,Pwat uncert (code),AOD (unitless),AOD source,AOD uncert (code),Alb (unitless),Alb source,Alb uncert (code),Lprecip depth (mm),Lprecip quantity (hr),Lprecip source,Lprecip uncert (code)
 def read_csv(report_city="kyiv"):
-    all_data_map = {}
+    cut_bank_muni_ap_map = {}
     path = r'xlsdata/' + report_city + '-data.csv'
     data = pd.read_csv(path)
 
@@ -18,11 +71,51 @@ def read_csv(report_city="kyiv"):
     times = data['Time (HH:MM)']
     etrn = data['ETRN (W/m^2)']
 
-    all_data_map["date"] = dates.values
-    all_data_map["time"] = times.values
-    all_data_map["etrn"] = etrn.values
+    cut_bank_muni_ap_map["date"] = dates.values
+    cut_bank_muni_ap_map["time"] = times.values
+    cut_bank_muni_ap_map["etrn"] = etrn.values
 
-    all_data_map["fullDate"] = tab1_service.map_full_datetime_from_date_and_time(all_data_map)
+    cut_bank_muni_ap_map["fullDate"] = tab1_service.map_full_datetime_from_date_and_time(cut_bank_muni_ap_map)
+    return cut_bank_muni_ap_map
+
+
+def read_xml_all_months_with_interval():
+    global start_date
+    global end_date
+    all_data_map = read_xml_all_months()
+
+    if start_date != "UNDEFINED" and end_date != "UNDEFINED":
+        start_date = datetime.datetime.strptime(str(start_date), '%Y-%m-%d')
+        end_date = datetime.datetime.strptime(str(end_date), '%Y-%m-%d')
+
+    print(start_date)
+    print(all_data_map["fullDate"][0])
+    try:
+        start_index = all_data_map["fullDate"].index(start_date)
+    except ValueError:
+        start_index = 0
+
+    try:
+        end_index = all_data_map["fullDate"].index(end_date)
+    except ValueError:
+        end_index = -1
+
+    print(start_index)
+    print(end_index)
+
+    all_data_map["days"] = all_data_map["days"][start_index:end_index]
+    all_data_map["UTC"] = all_data_map["UTC"][start_index:end_index]
+    all_data_map["T"] = all_data_map["T"][start_index:end_index]
+    all_data_map["dd"] = all_data_map["dd"][start_index:end_index]
+    all_data_map["FF"] = all_data_map["FF"][start_index:end_index]
+    # all_data_map["ww"].extend(all_data_map["ww"])
+    # all_data_map["N"].extend(all_data_map["N"])
+    # all_data_map["vv"].extend(all_data_map["vv"])
+    # all_data_map["U"].extend(all_data_map["U"])
+    # all_data_map["PPP"].extend(all_data_map["PPP"])
+    # all_data_map["hhh"].extend(all_data_map["hhh"])
+    all_data_map["fullDate"] = all_data_map["fullDate"][start_index:end_index]
+
     return all_data_map
 
 
@@ -60,11 +153,12 @@ def read_xml_from_single_report(path):
 def obtain_xls_files_from_directory():
     dir_name = r'xlsdata/'
     paths = [dir_name + name for name in os.listdir(dir_name)
-                      if os.path.isfile(os.path.join(dir_name, name))
-                      and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)
-                        and not name.startswith('~')]
+             if os.path.isfile(os.path.join(dir_name, name))
+             and re.match(r'(\D)+-(\d)+-(\d)+\.xlsx', name)
+             and not name.startswith('~')]
     paths.sort(key=len)
     return paths
+
 
 # months_in_year = 12
 def read_xml_all_months():
@@ -213,10 +307,32 @@ def map_to_logarithmic(l):
 
 
 
-    # pattern = dir_name + report_city + "-" + report_year + '-{}.xlsx'
-    # paths = [pattern.format(i + 1) for i in range(n_of_files)]
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# pattern = dir_name + report_city + "-" + report_year + '-{}.xlsx'
+# paths = [pattern.format(i + 1) for i in range(n_of_files)]
 
 # def read_by_lines():
 #     filename = r'xlsdata/data.txt'
@@ -265,3 +381,22 @@ def map_to_logarithmic(l):
 #          'Pwat uncert(code)', 'AOD(unitless)', 'AOD source', 'AOD uncert(code)',
 #          'Alb(unitless)', 'Alb source', 'Alb uncert(code)', 'Lprecip depth(mm)', 'Lprecip quantity(hr)',
 #          'Lprecip source', 'Lprecip uncert(code)'])
+
+
+# try:
+#     start_index = cut_bank_muni_ap_map["date"].index(start_date)
+# except ValueError:
+#     start_index = cut_bank_muni_ap_map["date"][0]
+#
+# try:
+#     end_index = cut_bank_muni_ap_map["date"].index(end_date)
+# except ValueError:
+#     end_index = cut_bank_muni_ap_map["date"][-1]
+
+
+
+
+
+
+
+

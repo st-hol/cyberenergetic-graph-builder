@@ -11,19 +11,20 @@ import tabs.router_page as router
 import services.tab1_service as tab1_service
 import services.common_service as my_service
 
-all_data_map = my_service.read_xml_all_months()
-cut_bank_muni_ap_map = my_service.read_csv()
+all_data_map = my_service.read_xml_all_months_with_interval()
+cut_bank_muni_ap_map = my_service.read_csv_with_interval()
 is_active = "NO_ONE_IS_ACTIVE_NOW"
 
-#data
+
+# data
 def update_all_data_map():
     global all_data_map
-    all_data_map = my_service.read_xml_all_months()
+    all_data_map = my_service.read_xml_all_months_with_interval()
+
 
 def update_cut_bank_muni_ap_map():
     global cut_bank_muni_ap_map
-    cut_bank_muni_ap_map = my_service.read_csv()
-
+    cut_bank_muni_ap_map = my_service.read_csv_with_interval()
 
 
 # 1
@@ -197,6 +198,7 @@ def display_graph_and_set_active(controller, frame, active):
     print("g", is_active)
     controller.show_frame(frame)
 
+
 class Tab1Page(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -212,7 +214,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph1_TemperatureCond,
                                                                             "1_1"))
-                               # command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
+        # command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
         graph1_btn.config(font=my_view.CONSOLE_FONT_12)
         graph1_btn.pack(pady=5, padx=5)
         graph2_btn = tk.Button(self, text="Тривалість температурних режимів",
@@ -222,7 +224,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph2_TemperatureDuration,
                                                                             "1_2"))
-                               # command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
+        # command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
         graph2_btn.config(font=my_view.CONSOLE_FONT_12)
         graph2_btn.pack(pady=5, padx=5)
         graph3_btn = tk.Button(self, text="Троянда вітрів",
@@ -232,7 +234,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph3_WindRose,
                                                                             "1_3"))
-                               # command=lambda: controller.show_frame(Tab1Graph3_WindRose))
+        # command=lambda: controller.show_frame(Tab1Graph3_WindRose))
         graph3_btn.config(font=my_view.CONSOLE_FONT_12)
         graph3_btn.pack(pady=5, padx=5)
         graph4_btn = tk.Button(self, text="Тривалість режимів вітрової активності",
@@ -242,7 +244,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph4_WindDuration,
                                                                             "1_4"))
-                               # command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
+        # command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
         graph4_btn.config(font=my_view.CONSOLE_FONT_12)
         graph4_btn.pack(pady=5, padx=5)
         graph5_btn = tk.Button(self, text="Інтенсивність сонячної інсоляції",
@@ -252,7 +254,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph5_SolarInsolation,
                                                                             "1_5"))
-                               # command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
+        # command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
         graph5_btn.config(font=my_view.CONSOLE_FONT_12)
         graph5_btn.pack(pady=5, padx=5)
         graph6_btn = tk.Button(self, text="Тривалість режимів сонячної активності",
@@ -262,7 +264,7 @@ class Tab1Page(tk.Frame):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Graph6_SolarActivityDuration,
                                                                             "1_6"))
-                               # command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
+        # command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
         graph6_btn.config(font=my_view.CONSOLE_FONT_12)
         graph6_btn.pack(pady=5, padx=5)
 
@@ -273,9 +275,58 @@ class Tab1Page(tk.Frame):
                                 command=lambda: display_graph_and_set_active(controller,
                                                                              router.WelcomePage,
                                                                              "DISABLED"))
-                                # command=lambda: controller.show_frame(router.WelcomePage))
+        # command=lambda: controller.show_frame(router.WelcomePage))
         button_exit.config(font=my_view.CONSOLE_FONT_12)
         button_exit.pack(pady=20, padx=20)
+
+        button_exit = tk.Button(self, text="на sadfasfasfd",
+                                width=40, bg='lightgreen', fg='blue', relief='flat',
+                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                highlightbackground="#37d3ff", borderwidth=4,
+                                command=lambda: display_graph_and_set_active(controller,
+                                                                             GetInputFrame,
+                                                                             "DISABLED"))
+        # command=lambda: controller.show_frame(router.WelcomePage))
+        button_exit.config(font=my_view.CONSOLE_FONT_12)
+        button_exit.pack(pady=20, padx=20)
+
+
+class GetInputFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                router.WelcomePage,
+                                                                                "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                Tab1Page,
+                                                                                "DISABLED"))
+        button_go_back.pack()
+
+        var_from = tk.StringVar()
+        var_to = tk.StringVar()
+        ent_from = tk.Entry(self, textvariable=var_from)
+        ent_to = tk.Entry(self, textvariable=var_to)
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: my_service.set_date_interval(var_from.get(), var_to.get()))
+
+        label = tk.Label(self, text=("""Значення дати для початку інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.pack(pady=10, padx=10)
+        ent_from.pack()
+
+        label = tk.Label(self, text=("""Значення дати для кінця інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.pack(pady=10, padx=10)
+        ent_to.pack()
+        btn1.pack()
 
 
 class Tab1Graph1_TemperatureCond(tk.Frame):
@@ -332,14 +383,14 @@ def form_tab1_subtab(frame, controller, figure):
                                command=lambda: display_graph_and_set_active(controller,
                                                                             router.WelcomePage,
                                                                             "DISABLED"))
-                               # command=lambda: controller.show_frame(router.WelcomePage))
+    # command=lambda: controller.show_frame(router.WelcomePage))
     button_to_main.pack()
 
     button_go_back = tk.Button(frame, text="назад", width=40,
                                command=lambda: display_graph_and_set_active(controller,
                                                                             Tab1Page,
                                                                             "DISABLED"))
-                               # command=lambda: controller.show_frame(Tab1Page))
+    # command=lambda: controller.show_frame(Tab1Page))
     button_go_back.pack()
 
     canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
@@ -348,6 +399,13 @@ def form_tab1_subtab(frame, controller, figure):
     toolbar = NavigationToolbar2Tk(canvas, frame)
     toolbar.update()
     canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+
+
+
+
+
 
 
 

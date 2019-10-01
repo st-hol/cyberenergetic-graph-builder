@@ -24,6 +24,7 @@ class Application(tk.Tk):
                       welcome.WelcomePage,
                       welcome.DataInfoPage,
                       tab1_graphs.Tab1Page,
+                      tab1_graphs.GetInputFrame,
                       tab1_graphs.Tab1Graph1_TemperatureCond,
                       tab1_graphs.Tab1Graph2_TemperatureDuration,
                       tab1_graphs.Tab1Graph3_WindRose,
@@ -52,12 +53,12 @@ if __name__ == '__main__':
                                                  tab1_graphs.animate_windrose_graph, interval=10000)
     temperature_duration_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_regime_duration_graph_fig,
                                                              tab1_graphs.animate_temperature_duration_graph,
-                                                             interval=10000)
+                                                             interval=20000)
     wind_graph_ani = animation.FuncAnimation(tab1_graphs.wind_duration_graph_fig,
-                                             tab1_graphs.animate_wind_duration_graph, interval=10000)
+                                             tab1_graphs.animate_wind_duration_graph, interval=20000)
     solar_insolation_graph_ani = animation.FuncAnimation(tab1_graphs.solar_insolation_graph_fig,
-                                                         tab1_graphs.animate_insolation_graph, interval=10000)
+                                                         tab1_graphs.animate_insolation_graph, interval=30000)
     solar_activity_duration_graph_ani = animation.FuncAnimation(tab1_graphs.solar_duration_graph_fig,
                                                                 tab1_graphs.animate_solar_activity_duration_graph,
-                                                                interval=10000)
+                                                                interval=30000)
     app.mainloop()
