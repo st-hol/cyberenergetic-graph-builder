@@ -4,7 +4,8 @@ import re
 
 import view.custom_view as my_view
 import tabs.tab1.tab1_graphs as tab1_graphs
-import services.common_service as my_service
+import tabs.tab3.tab3_graphs as tab3_graphs
+import services.data_service as data_service
 
 # all_data_map = my_service.read_xml_all_months()
 # cut_bank_muni_ap_map = my_service.read_csv()
@@ -60,6 +61,15 @@ class WelcomePage(tk.Frame):
                             command=lambda: controller.show_frame(tab1_graphs.Tab1Page))
         button1.config(font=my_view.CONSOLE_FONT_12)
         button1.pack(pady=5, padx=5)
+
+        button1 = tk.Button(self, text="3.Теплотехнічні характеристики будівлі",
+                            width=40, bg='lightgreen', fg='blue', relief='flat',
+                            bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                            highlightbackground="#37d3ff", borderwidth=4,
+                            command=lambda: controller.show_frame(tab3_graphs.Tab3Page))
+        button1.config(font=my_view.CONSOLE_FONT_12)
+        button1.pack(pady=5, padx=5)
+
         button_exit = tk.Button(self, text="вихід",
                                 width=40, bg='red', fg='black', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
@@ -73,7 +83,7 @@ class DataInfoPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        paths = my_service.obtain_xls_files_from_directory()
+        paths = data_service.obtain_xls_files_from_directory()
         paths = [path[8:] for path in paths]
         filenames_list = ", ".join([path[:-5] for path in paths])
         city_name_search_res = re.search(r'(\D)+-', paths[0])

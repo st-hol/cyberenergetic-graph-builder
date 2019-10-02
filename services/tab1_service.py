@@ -3,7 +3,8 @@ import math
 
 from collections import Counter
 import pandas as pd
-import services.common_service as my_service
+import services.util_service as my_service
+import services.data_service as data_service
 
 # North - Northeast - East - Southeast - South - Southwest - West - Northwest
 # Север - Северо-Восток - Восток - Юго-Восток - Юг - Юго-Запад - Восток - Северо-Запад
@@ -60,47 +61,6 @@ def map_ws_by_frequency(l):
         if int(zipped[1]) != 0:
             result_map[zipped[0]] = int(zipped[1])
     return result_map
-
-
-def map_full_datetime(all_data_map, path):
-    days = my_service.restore_lost_data(all_data_map["days"])
-    UTCs = my_service.restore_lost_data(all_data_map["UTC"])
-
-    all_dates = []
-
-    for day, utc in zip(days, UTCs):
-        year = path[13:17]
-        month = path[18:20]
-        month = month.replace(".", "")
-        day = datetime.datetime(year=int(year), month=int(month),
-                                day=int(day), hour=utc.hour, minute=utc.minute)
-        all_dates.append(day)
-    return all_dates
-
-
-def map_full_datetime_from_date_and_time(all_data_map):
-    dates = my_service.restore_lost_data(all_data_map["date"])
-    times = my_service.restore_lost_data(all_data_map["time"])
-
-    all_dates = []
-    for date_str, time_str in zip(dates, times):
-        date_object = parse_date(date_str)
-        time_object = parse_time(time_str)
-        day = datetime.datetime(year=int(date_object.year), month=int(date_object.month),
-                                day=int(date_object.day), hour=time_object.hour, minute=time_object.minute)
-        all_dates.append(day)
-
-    return all_dates
-
-
-def parse_date(date_str):
-    return datetime.datetime.strptime(date_str, '%m/%d/%Y').date()
-
-
-def parse_time(time_str):
-    if time_str == '24:00':
-        time_str = '00:00'
-    return datetime.datetime.strptime(time_str, '%H:%M').time()
 
 
 def map_solar_activity_duration(cut_bank_muni_ap_map):

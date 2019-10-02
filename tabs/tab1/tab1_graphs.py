@@ -9,22 +9,9 @@ from windrose import WindroseAxes
 import view.custom_view as my_view
 import tabs.router_page as router
 import services.tab1_service as tab1_service
-import services.common_service as my_service
+import services.util_service as my_service
+import services.data_service as data_service
 
-all_data_map = my_service.read_xml_all_months_with_interval()
-cut_bank_muni_ap_map = my_service.read_csv_with_interval()
-is_active = "NO_ONE_IS_ACTIVE_NOW"
-
-
-# data
-def update_all_data_map():
-    global all_data_map
-    all_data_map = my_service.read_xml_all_months_with_interval()
-
-
-def update_cut_bank_muni_ap_map():
-    global cut_bank_muni_ap_map
-    cut_bank_muni_ap_map = my_service.read_csv_with_interval()
 
 
 # 1
@@ -51,14 +38,13 @@ solar_insolation_graph_ax = solar_insolation_graph_fig.add_subplot(111)
 solar_duration_graph_fig = Figure()
 solar_duration_graph_ax = solar_duration_graph_fig.add_subplot(111)
 
-def get_axis_limits(ax, scale=.9):
-    return ax.get_xlim()[1]*scale, ax.get_ylim()[1]*scale
+
 def animate_temperature_graph(i):
-    global all_data_map
-    global is_active
+    all_data_map=data_service.get_all_data_map()
+    is_active = data_service.get_active()
     print("a", is_active)
     if is_active == "1_1":
-        update_all_data_map()
+        data_service.update_all_data_map()
 
     xs = my_service.restore_lost_data(all_data_map['fullDate'])
     ys = my_service.restore_lost_data(all_data_map['T'])
@@ -74,10 +60,10 @@ def animate_temperature_graph(i):
 
 
 def animate_temperature_duration_graph(i):
-    global all_data_map
-    global is_active
+    all_data_map=data_service.get_all_data_map()
+    is_active = data_service.get_active()
     if is_active == "1_2":
-        update_all_data_map()
+        data_service.update_all_data_map()
 
     map_t_freq = tab1_service.map_temperature_duration(all_data_map)
     xs = list(map_t_freq.keys())
@@ -106,10 +92,10 @@ def animate_temperature_duration_graph(i):
 
 
 def animate_windrose_graph(i):
-    global all_data_map
-    global is_active
+    all_data_map=data_service.get_all_data_map()
+    is_active = data_service.get_active()
     if is_active == "1_3":
-        update_all_data_map()
+        data_service.update_all_data_map()
 
     ws = my_service.restore_lost_data(all_data_map['FF'])
     wd = my_service.restore_lost_data(all_data_map['dd'])
@@ -146,10 +132,10 @@ def animate_windrose_graph(i):
 
 
 def animate_wind_duration_graph(i):
-    global all_data_map
-    global is_active
+    all_data_map=data_service.get_all_data_map()
+    is_active = data_service.get_active()
     if is_active == "1_4":
-        update_all_data_map()
+        data_service.update_all_data_map()
 
     map_t_freq = tab1_service.map_wind_duration(all_data_map)
     xs = list(map_t_freq.keys())
@@ -162,10 +148,10 @@ def animate_wind_duration_graph(i):
 
 
 def animate_insolation_graph(i):
-    global cut_bank_muni_ap_map
-    global is_active
+    cut_bank_muni_ap_map=data_service.get_cut_bank_muni_ap_map()
+    is_active = data_service.get_active()
     if is_active == "1_5":
-        update_cut_bank_muni_ap_map()
+        data_service.update_cut_bank_muni_ap_map()
 
     xs = (cut_bank_muni_ap_map['fullDate'])
     ys = (cut_bank_muni_ap_map['etrn'])
@@ -178,10 +164,10 @@ def animate_insolation_graph(i):
 
 
 def animate_solar_activity_duration_graph(i):
-    global cut_bank_muni_ap_map
-    global is_active
+    cut_bank_muni_ap_map=data_service.get_cut_bank_muni_ap_map()
+    is_active = data_service.get_active()
     if is_active == "1_6":
-        update_cut_bank_muni_ap_map()
+        data_service.update_cut_bank_muni_ap_map()
 
     map_t_freq = tab1_service.map_solar_activity_duration(cut_bank_muni_ap_map)
     xs = list(map_t_freq.keys())
@@ -192,12 +178,6 @@ def animate_solar_activity_duration_graph(i):
     solar_duration_graph_ax.grid()
     solar_duration_graph_ax.bar(xs, ys)
 
-
-def display_graph_and_set_active(controller, frame, active):
-    global is_active
-    is_active = active
-    print("g", is_active)
-    controller.show_frame(frame)
 
 
 class Tab1Page(tk.Frame):
@@ -212,7 +192,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph1_TemperatureCond,
                                                                             "1_1"))
         # command=lambda: controller.show_frame(Tab1Graph1_TemperatureCond))
@@ -222,7 +202,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph2_TemperatureDuration,
                                                                             "1_2"))
         # command=lambda: controller.show_frame(Tab1Graph2_TemperatureDuration))
@@ -232,7 +212,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph3_WindRose,
                                                                             "1_3"))
         # command=lambda: controller.show_frame(Tab1Graph3_WindRose))
@@ -242,7 +222,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph4_WindDuration,
                                                                             "1_4"))
         # command=lambda: controller.show_frame(Tab1Graph4_WindDuration))
@@ -252,7 +232,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph5_SolarInsolation,
                                                                             "1_5"))
         # command=lambda: controller.show_frame(Tab1Graph5_SolarInsolation))
@@ -262,7 +242,7 @@ class Tab1Page(tk.Frame):
                                width=40, bg='lightgreen', fg='blue', relief='flat',
                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Graph6_SolarActivityDuration,
                                                                             "1_6"))
         # command=lambda: controller.show_frame(Tab1Graph6_SolarActivityDuration))
@@ -273,7 +253,7 @@ class Tab1Page(tk.Frame):
                                 width=40, bg='lightgreen', fg='blue', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
-                                command=lambda: display_graph_and_set_active(controller,
+                                command=lambda: data_service.display_graph_and_set_active(controller,
                                                                              router.WelcomePage,
                                                                              "DISABLED"))
         button_exit.config(font=my_view.CONSOLE_FONT_12)
@@ -287,7 +267,7 @@ class Tab1Page(tk.Frame):
                                 width=40, bg='lightblue', fg='green', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
-                                command=lambda: display_graph_and_set_active(controller,
+                                command=lambda: data_service.display_graph_and_set_active(controller,
                                                                              GetInput1Frame,
                                                                              "DISABLED"))
         button_set_interval.config(font=my_view.CONSOLE_FONT_12)
@@ -297,7 +277,7 @@ class Tab1Page(tk.Frame):
                                 width=40, bg='lightblue', fg='green', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
-                                command=lambda: display_graph_and_set_active(controller,
+                                command=lambda: data_service.display_graph_and_set_active(controller,
                                                                              GetInput2Frame,
                                                                              "DISABLED"))
         button_set_interval.config(font=my_view.CONSOLE_FONT_12)
@@ -307,46 +287,54 @@ class Tab1Page(tk.Frame):
 class Tab1Graph1_TemperatureCond(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        is_active = data_service.get_active()
+        if is_active != "1_1":
+            data_service.set_active("1_1")
         form_tab1_subtab(self, controller, temperature_graph_fig)
 
 
 class Tab1Graph2_TemperatureDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global is_active
-        is_active = "1_2"
+        is_active = data_service.get_active()
+        if is_active != "1_2":
+            data_service.set_active("1_2")
         form_tab1_subtab(self, controller, temperature_regime_duration_graph_fig)
 
 
 class Tab1Graph3_WindRose(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global is_active
-        is_active = "1_3"
+        is_active = data_service.get_active()
+        if is_active != "1_3":
+            data_service.set_active("1_3")
         form_tab1_subtab(self, controller, windrose_graph_fig)
 
 
 class Tab1Graph4_WindDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global is_active
-        is_active = "1_4"
+        is_active = data_service.get_active()
+        if is_active != "1_4":
+            data_service.set_active("1_4")
         form_tab1_subtab(self, controller, wind_duration_graph_fig)
 
 
 class Tab1Graph5_SolarInsolation(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global is_active
-        is_active = "1_5"
+        is_active = data_service.get_active()
+        if is_active != "1_5":
+            data_service.set_active("1_5")
         form_tab1_subtab(self, controller, solar_insolation_graph_fig)
 
 
 class Tab1Graph6_SolarActivityDuration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        global is_active
-        is_active = "1_6"
+        is_active = data_service.get_active()
+        if is_active != "1_6":
+            data_service.set_active("1_6")
         form_tab1_subtab(self, controller, solar_duration_graph_fig)
 
 
@@ -355,14 +343,14 @@ def form_tab1_subtab(frame, controller, figure):
     # label.pack(pady=10, padx=10)
 
     button_to_main = tk.Button(frame, text="на головну", width=40,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             router.WelcomePage,
                                                                             "DISABLED"))
     # command=lambda: controller.show_frame(router.WelcomePage))
     button_to_main.pack()
 
     button_go_back = tk.Button(frame, text="назад", width=40,
-                               command=lambda: display_graph_and_set_active(controller,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
                                                                             Tab1Page,
                                                                             "DISABLED"))
     # command=lambda: controller.show_frame(Tab1Page))
@@ -381,12 +369,12 @@ class GetInput1Frame(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         button_to_main = tk.Button(self, text="на головну", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
                                                                                 router.WelcomePage,
                                                                                 "DISABLED"))
         button_to_main.pack()
         button_go_back = tk.Button(self, text="назад", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
                                                                                 Tab1Page,
                                                                                 "DISABLED"))
         button_go_back.pack()
@@ -394,9 +382,9 @@ class GetInput1Frame(tk.Frame):
         var_from = tk.StringVar()
         var_to = tk.StringVar()
         ent_from = tk.Entry(self, textvariable=var_from)
-        ent_from.insert(0, my_service.get_date_interval()[0])
+        ent_from.insert(0, data_service.get_date_interval()[0])
         ent_to = tk.Entry(self, textvariable=var_to)
-        ent_to.insert(0, my_service.get_date_interval()[1])
+        ent_to.insert(0, data_service.get_date_interval()[1])
 
         label = tk.Label(self, text=("""\n\n\nФормат введення: рік-місяць-день"""),
                          font=my_view.CONSOLE_FONT_12)
@@ -419,7 +407,7 @@ class GetInput1Frame(tk.Frame):
                          width=10, bg='lightgreen', fg='blue', relief='flat',
                          bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                          highlightbackground="#37d3ff", borderwidth=4,
-                         command=lambda: my_service.set_date_interval(var_from.get(), var_to.get()))
+                         command=lambda: data_service.set_date_interval(var_from.get(), var_to.get()))
         btn1.pack(padx=10, pady=30)
 
 
@@ -428,12 +416,12 @@ class GetInput2Frame(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         button_to_main = tk.Button(self, text="на головну", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
                                                                                 router.WelcomePage,
                                                                                 "DISABLED"))
         button_to_main.pack()
         button_go_back = tk.Button(self, text="назад", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
                                                                                 Tab1Page,
                                                                                 "DISABLED"))
         button_go_back.pack()
@@ -441,9 +429,9 @@ class GetInput2Frame(tk.Frame):
         var_from = tk.StringVar()
         var_to = tk.StringVar()
         ent_from = tk.Entry(self, textvariable=var_from)
-        ent_from.insert(0, my_service.get_date_muni_interval()[0])
+        ent_from.insert(0, data_service.get_date_muni_interval()[0])
         ent_to = tk.Entry(self, textvariable=var_to)
-        ent_to.insert(0, my_service.get_date_muni_interval()[1])
+        ent_to.insert(0, data_service.get_date_muni_interval()[1])
 
         label = tk.Label(self, text=("""\n\n\nФормат введення: місяць/день/рік"""),
                          font=my_view.CONSOLE_FONT_12)
@@ -466,7 +454,7 @@ class GetInput2Frame(tk.Frame):
                          width=10, bg='lightgreen', fg='blue', relief='flat',
                          bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                          highlightbackground="#37d3ff", borderwidth=4,
-                         command=lambda: my_service.set_date_muni_interval(var_from.get(), var_to.get()))
+                         command=lambda: data_service.set_date_muni_interval(var_from.get(), var_to.get()))
         btn1.pack(padx=10, pady=30)
 
 

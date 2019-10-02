@@ -1,11 +1,11 @@
 import matplotlib
 import matplotlib.animation as animation
-from matplotlib import style
 import tkinter as tk
 
 import view.custom_view as my_view
 import tabs.router_page as welcome
 import tabs.tab1.tab1_graphs as tab1_graphs
+import tabs.tab3.tab3_graphs as tab3_graphs
 
 matplotlib.use("TkAgg")
 # style.use("ggplot")  # style.use("fivethirtyeight")
@@ -31,7 +31,9 @@ class Application(tk.Tk):
                       tab1_graphs.Tab1Graph3_WindRose,
                       tab1_graphs.Tab1Graph4_WindDuration,
                       tab1_graphs.Tab1Graph5_SolarInsolation,
-                      tab1_graphs.Tab1Graph6_SolarActivityDuration)
+                      tab1_graphs.Tab1Graph6_SolarActivityDuration,
+
+                      tab3_graphs.Tab3Page)
 
         for F in all_frames:
             frame = F(container, self)
