@@ -51,7 +51,8 @@ solar_insolation_graph_ax = solar_insolation_graph_fig.add_subplot(111)
 solar_duration_graph_fig = Figure()
 solar_duration_graph_ax = solar_duration_graph_fig.add_subplot(111)
 
-
+def get_axis_limits(ax, scale=.9):
+    return ax.get_xlim()[1]*scale, ax.get_ylim()[1]*scale
 def animate_temperature_graph(i):
     global all_data_map
     global is_active
@@ -63,13 +64,13 @@ def animate_temperature_graph(i):
     ys = my_service.restore_lost_data(all_data_map['T'])
     date = [item.date() for item in xs]
     temperature_graph_ax.clear()
-    temperature_graph_ax.set(xlabel='дата', ylabel='t ℃',
+    temperature_graph_ax.set(xlabel='дата (вісь Х)', ylabel='t ℃ (вісь У)',
                              title='Температурні умови')
     temperature_graph_ax.grid()
     temperature_graph_ax.plot_date(date, ys,
                                    linestyle='-', linewidth='0.3',
                                    markersize=1,
-                                   label="t ℃")
+                                   label="t ℃ ")
 
 
 def animate_temperature_duration_graph(i):
@@ -98,7 +99,7 @@ def animate_temperature_duration_graph(i):
     for key, cell in table.get_celld().items():
         cell.set_linewidth(0.1)
 
-    temperature_regime_duration_graph_ax.set(xlabel='t ℃', ylabel='год.',
+    temperature_regime_duration_graph_ax.set(xlabel='t ℃ (вісь Х)', ylabel='год. (вісь У)',
                                              title='Тривалість температурних режимів')
     temperature_regime_duration_graph_ax.grid()
     temperature_regime_duration_graph_ax.bar(xs, ys)
@@ -154,7 +155,7 @@ def animate_wind_duration_graph(i):
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
     wind_duration_graph_ax.clear()
-    wind_duration_graph_ax.set(xlabel='м/с', ylabel='год.',
+    wind_duration_graph_ax.set(xlabel='м/с (вісь Х)', ylabel='год. (вісь У)',
                                title='Тривалість режимів вітрової активності вітрів ')
     wind_duration_graph_ax.grid()
     wind_duration_graph_ax.bar(xs, ys)
@@ -170,7 +171,7 @@ def animate_insolation_graph(i):
     ys = (cut_bank_muni_ap_map['etrn'])
     # date = [item.date() for item in xs]
     solar_insolation_graph_ax.clear()
-    solar_insolation_graph_ax.set(xlabel='дата', ylabel='Вт/м²',
+    solar_insolation_graph_ax.set(xlabel='дата (вісь Х)', ylabel='Вт/м² (вісь У)',
                                   title='Інтенсивність сонячної інсоляції ')
     solar_insolation_graph_ax.grid()
     solar_insolation_graph_ax.bar(xs, ys, width=0.3)
@@ -186,7 +187,7 @@ def animate_solar_activity_duration_graph(i):
     xs = list(map_t_freq.keys())
     ys = list(map_t_freq.values())
     solar_duration_graph_ax.clear()
-    solar_duration_graph_ax.set(xlabel='log Вт/м²', ylabel='год.',
+    solar_duration_graph_ax.set(xlabel='Вт/м² (вісь Х)', ylabel='год. (вісь У)',
                                 title='Тривалість режимів сонячної активності')
     solar_duration_graph_ax.grid()
     solar_duration_graph_ax.bar(xs, ys)
@@ -275,58 +276,32 @@ class Tab1Page(tk.Frame):
                                 command=lambda: display_graph_and_set_active(controller,
                                                                              router.WelcomePage,
                                                                              "DISABLED"))
-        # command=lambda: controller.show_frame(router.WelcomePage))
         button_exit.config(font=my_view.CONSOLE_FONT_12)
-        button_exit.pack(pady=20, padx=20)
+        button_exit.pack(pady=10, padx=10)
 
-        button_exit = tk.Button(self, text="на sadfasfasfd",
-                                width=40, bg='lightgreen', fg='blue', relief='flat',
+        label = tk.Label(self, text=("""\n"""), font=my_view.CONSOLE_FONT_16)
+        label.pack(pady=5, padx=5)
+        label.configure(background='black', foreground='lightblue')
+
+        button_set_interval = tk.Button(self, text="Вказати інтервал для температурних даних.",
+                                width=40, bg='lightblue', fg='green', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
                                 command=lambda: display_graph_and_set_active(controller,
-                                                                             GetInputFrame,
+                                                                             GetInput1Frame,
                                                                              "DISABLED"))
-        # command=lambda: controller.show_frame(router.WelcomePage))
-        button_exit.config(font=my_view.CONSOLE_FONT_12)
-        button_exit.pack(pady=20, padx=20)
+        button_set_interval.config(font=my_view.CONSOLE_FONT_12)
+        button_set_interval.pack(pady=5, padx=5)
 
-
-class GetInputFrame(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-
-        button_to_main = tk.Button(self, text="на головну", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
-                                                                                router.WelcomePage,
-                                                                                "DISABLED"))
-        button_to_main.pack()
-        button_go_back = tk.Button(self, text="назад", width=40,
-                                   command=lambda: display_graph_and_set_active(controller,
-                                                                                Tab1Page,
-                                                                                "DISABLED"))
-        button_go_back.pack()
-
-        var_from = tk.StringVar()
-        var_to = tk.StringVar()
-        ent_from = tk.Entry(self, textvariable=var_from)
-        ent_to = tk.Entry(self, textvariable=var_to)
-
-        btn1 = tk.Button(self, text="OK",
-                         width=10, bg='lightgreen', fg='blue', relief='flat',
-                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
-                         highlightbackground="#37d3ff", borderwidth=4,
-                         command=lambda: my_service.set_date_interval(var_from.get(), var_to.get()))
-
-        label = tk.Label(self, text=("""Значення дати для початку інтервалу:"""),
-                         font=my_view.CONSOLE_FONT_12)
-        label.pack(pady=10, padx=10)
-        ent_from.pack()
-
-        label = tk.Label(self, text=("""Значення дати для кінця інтервалу:"""),
-                         font=my_view.CONSOLE_FONT_12)
-        label.pack(pady=10, padx=10)
-        ent_to.pack()
-        btn1.pack()
+        button_set_interval = tk.Button(self, text="Вказати інтервал для даних по сонцю.",
+                                width=40, bg='lightblue', fg='green', relief='flat',
+                                bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                highlightbackground="#37d3ff", borderwidth=4,
+                                command=lambda: display_graph_and_set_active(controller,
+                                                                             GetInput2Frame,
+                                                                             "DISABLED"))
+        button_set_interval.config(font=my_view.CONSOLE_FONT_12)
+        button_set_interval.pack(pady=5, padx=5)
 
 
 class Tab1Graph1_TemperatureCond(tk.Frame):
@@ -399,6 +374,102 @@ def form_tab1_subtab(frame, controller, figure):
     toolbar = NavigationToolbar2Tk(canvas, frame)
     toolbar.update()
     canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+class GetInput1Frame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                router.WelcomePage,
+                                                                                "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                Tab1Page,
+                                                                                "DISABLED"))
+        button_go_back.pack()
+
+        var_from = tk.StringVar()
+        var_to = tk.StringVar()
+        ent_from = tk.Entry(self, textvariable=var_from)
+        ent_from.insert(0, my_service.get_date_interval()[0])
+        ent_to = tk.Entry(self, textvariable=var_to)
+        ent_to.insert(0, my_service.get_date_interval()[1])
+
+        label = tk.Label(self, text=("""\n\n\nФормат введення: рік-місяць-день"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='yellow')
+        label.pack(pady=20, padx=10)
+
+        label = tk.Label(self, text=("""\n\n\nЗначення дати для початку інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=20, padx=10)
+        ent_from.pack()
+
+        label = tk.Label(self, text=("""\nЗначення дати для кінця інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=20, padx=10)
+        ent_to.pack()
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: my_service.set_date_interval(var_from.get(), var_to.get()))
+        btn1.pack(padx=10, pady=30)
+
+
+class GetInput2Frame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                router.WelcomePage,
+                                                                                "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: display_graph_and_set_active(controller,
+                                                                                Tab1Page,
+                                                                                "DISABLED"))
+        button_go_back.pack()
+
+        var_from = tk.StringVar()
+        var_to = tk.StringVar()
+        ent_from = tk.Entry(self, textvariable=var_from)
+        ent_from.insert(0, my_service.get_date_muni_interval()[0])
+        ent_to = tk.Entry(self, textvariable=var_to)
+        ent_to.insert(0, my_service.get_date_muni_interval()[1])
+
+        label = tk.Label(self, text=("""\n\n\nФормат введення: місяць/день/рік"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='yellow')
+        label.pack(pady=20, padx=10)
+
+        label = tk.Label(self, text=("""\n\n\nЗначення дати для початку інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=20, padx=10)
+        ent_from.pack()
+
+        label = tk.Label(self, text=("""\nЗначення дати для кінця інтервалу:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=20, padx=10)
+        ent_to.pack()
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: my_service.set_date_muni_interval(var_from.get(), var_to.get()))
+        btn1.pack(padx=10, pady=30)
+
+
 
 
 

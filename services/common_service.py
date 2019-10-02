@@ -20,6 +20,7 @@ def set_date_interval(start, end):
     start_date = start
     end_date = end
     print(start_date)
+    print(end_date)
 
 
 def set_date_muni_interval(start, end):
@@ -27,7 +28,20 @@ def set_date_muni_interval(start, end):
     global end_date_muni
     start_date_muni = start
     end_date_muni = end
-    print(start_date)
+    print(start_date_muni)
+    print(end_date_muni)
+
+def get_date_interval():
+    global start_date
+    global end_date
+    return [start_date, end_date]
+
+
+def get_date_muni_interval():
+    global start_date_muni
+    global end_date_muni
+    return [start_date_muni, end_date_muni]
+
 
 def read_csv_with_interval(report_city="kyiv"):
     global start_date_muni
