@@ -110,7 +110,7 @@ class DataInfoPage(tk.Frame):
                             width=40, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
-                            command=lambda: controller.show_frame(tab1_graphs.Tab1Page))
+                            command=lambda: controller.show_frame(WelcomePage))
         button1.config(font=my_view.CONSOLE_FONT_16)
         button1.pack(pady=5, padx=5)
         button_exit = tk.Button(self, text="вихід",

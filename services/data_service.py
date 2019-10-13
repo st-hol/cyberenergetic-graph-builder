@@ -61,9 +61,11 @@ def read_csv(report_city="kyiv"):
     return cut_bank_muni_ap_map
 
 
-def read_xml_all_months_with_interval():
-    start_date = get_start_date()
-    end_date = get_end_date()
+def read_xml_all_months_with_interval(start, end):
+    # start_date = get_start_date()
+    # end_date = get_end_date()
+    start_date = start
+    end_date = end
     all_data_map = read_xml_all_months()
 
     if start_date != "UNDEFINED" and end_date != "UNDEFINED":
@@ -71,7 +73,8 @@ def read_xml_all_months_with_interval():
         end_date = datetime.datetime.strptime(str(end_date), '%Y-%m-%d')
 
     print(start_date)
-    print(all_data_map["fullDate"][0])
+    # print(all_data_map["fullDate"][0])
+    print(end_date)
     try:
         start_index = all_data_map["fullDate"].index(start_date)
     except ValueError:
@@ -185,13 +188,9 @@ def read_xml_all_months():
 
 start_date = 'UNDEFINED'
 end_date = 'UNDEFINED'
-
-
 def get_start_date():
     global start_date
     return start_date
-
-
 def get_end_date():
     global end_date
     return end_date
@@ -199,50 +198,35 @@ def get_end_date():
 
 start_date_muni = 'UNDEFINED'
 end_date_muni = 'UNDEFINED'
-
-
 def get_start_date_muni():
     global start_date_muni
     return start_date_muni
-
-
 def get_end_date_muni():
     global end_date_muni
     return end_date_muni
 
 
 is_active = "NO_ONE_IS_ACTIVE_NOW"
-
-all_data_map = read_xml_all_months_with_interval()
+all_data_map = read_xml_all_months_with_interval(
+    get_start_date(), get_end_date()
+)
 cut_bank_muni_ap_map = read_csv_with_interval()
-
-
 # data
-def update_all_data_map():
+def update_all_data_map(start, end):
     global all_data_map
-    all_data_map = read_xml_all_months_with_interval()
-
-
+    all_data_map = read_xml_all_months_with_interval(start, end)
 def update_cut_bank_muni_ap_map():
     global cut_bank_muni_ap_map
     cut_bank_muni_ap_map = read_csv_with_interval()
-
-
 def get_all_data_map():
     global all_data_map
     return all_data_map
-
-
 # def set_all_data_map(m):
 #     global all_data_map
 #     all_data_map = m
-
-
 def get_cut_bank_muni_ap_map():
     global cut_bank_muni_ap_map
     return cut_bank_muni_ap_map
-
-
 # def set_cut_bank_muni_ap_map(m):
 #     global cut_bank_muni_ap_map
 #     cut_bank_muni_ap_map = m
@@ -251,8 +235,6 @@ def get_cut_bank_muni_ap_map():
 def get_active():
     global is_active
     return is_active
-
-
 def set_active(s):
     global is_active
     is_active = s
@@ -263,8 +245,6 @@ def display_graph_and_set_active(controller, frame, active):
     is_active = active
     print("log: is active (graph) : ", is_active)
     controller.show_frame(frame)
-
-
 def set_date_interval(start, end):
     global start_date
     global end_date
@@ -281,8 +261,6 @@ def set_date_muni_interval(start, end):
     end_date_muni = end
     print(start_date_muni)
     print(end_date_muni)
-
-
 def get_date_interval():
     global start_date
     global end_date
@@ -293,3 +271,77 @@ def get_date_muni_interval():
     global start_date_muni
     global end_date_muni
     return [start_date_muni, end_date_muni]
+
+
+
+n_people = 1
+def get_n_people():
+    global n_people
+    return n_people
+def set_n_people(s):
+    global n_people
+    n_people = s
+    print(n_people)
+
+S = 42
+def get_S():
+    global S
+    return S
+def set_S(s):
+    global S
+    S = s
+    print(S)
+
+n_vann = 1
+def get_n_vann():
+    global n_vann
+    return n_vann
+def set_n_vann(s):
+    global n_vann
+    n_vann = s
+    print(n_vann)
+
+n_dush = 1
+def get_n_dush():
+    global n_dush
+    return n_dush
+def set_n_dush(s):
+    global n_dush
+    n_dush = s
+    print(n_dush)
+
+temperature_desired = 20
+def get_temperature_desired():
+    global temperature_desired
+    return temperature_desired
+def set_temperature_desired(s):
+    global temperature_desired
+    temperature_desired = s
+    print(temperature_desired)
+
+
+
+#опалювальный по умолч.
+start_date_tab3 = "2012-10-01"
+end_date_tab3 = "2012-03-01"
+def set_date_tab3_interval(start, end):
+    global start_date_tab3
+    global end_date_tab3
+    start_date_tab3 = start
+    end_date_tab3 = end
+    print(start_date_tab3)
+    print(end_date_tab3)
+def get_date_tab3_interval():
+    global start_date_tab3
+    global end_date_tab3
+    return [start_date_tab3, end_date_tab3]
+
+
+def set_tab3_data(n_people, s, n_dush, n_vann, t_desired, startdate, enddate):
+    set_active("3_1")
+    set_n_people(n_people)
+    set_S(s)
+    set_n_dush(n_dush)
+    set_n_vann(n_vann)
+    set_temperature_desired(t_desired)
+    set_date_tab3_interval(startdate, enddate)

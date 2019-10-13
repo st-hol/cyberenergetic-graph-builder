@@ -44,107 +44,107 @@ def animate_temperature_graph(i):
     is_active = data_service.get_active()
     print("a", is_active)
     if is_active == "1_1":
-        data_service.update_all_data_map()
+        data_service.update_all_data_map(data_service.get_start_date(), data_service.get_end_date())
 
-    xs = my_service.restore_lost_data(all_data_map['fullDate'])
-    ys = my_service.restore_lost_data(all_data_map['T'])
-    date = [item.date() for item in xs]
-    temperature_graph_ax.clear()
-    temperature_graph_ax.set(xlabel='дата (вісь Х)', ylabel='t ℃ (вісь У)',
-                             title='Температурні умови')
-    temperature_graph_ax.grid()
-    temperature_graph_ax.plot_date(date, ys,
-                                   linestyle='-', linewidth='0.3',
-                                   markersize=1,
-                                   label="t ℃ ")
+        xs = my_service.restore_lost_data(all_data_map['fullDate'])
+        ys = my_service.restore_lost_data(all_data_map['T'])
+        date = [item.date() for item in xs]
+        temperature_graph_ax.clear()
+        temperature_graph_ax.set(xlabel='дата (вісь Х)', ylabel='t ℃ (вісь У)',
+                                 title='Температурні умови')
+        temperature_graph_ax.grid()
+        temperature_graph_ax.plot_date(date, ys,
+                                       linestyle='-', linewidth='0.3',
+                                       markersize=1,
+                                       label="t ℃ ")
 
 
 def animate_temperature_duration_graph(i):
     all_data_map=data_service.get_all_data_map()
     is_active = data_service.get_active()
     if is_active == "1_2":
-        data_service.update_all_data_map()
+        data_service.update_all_data_map(data_service.get_start_date(), data_service.get_end_date())
 
-    map_t_freq = tab1_service.map_temperature_duration(all_data_map)
-    xs = list(map_t_freq.keys())
-    ys = list(map_t_freq.values())
-    temperature_regime_duration_graph_ax.clear()
+        map_t_freq = tab1_service.map_temperature_duration(all_data_map)
+        xs = list(map_t_freq.keys())
+        ys = list(map_t_freq.values())
+        temperature_regime_duration_graph_ax.clear()
 
-    final_data = [xs, ys]
-    table = temperature_regime_duration_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
-                                                       bbox=[0.0, -0.45, 1, .28])
-    temperature_regime_duration_graph_fig.subplots_adjust(bottom=0.3)
-    table.auto_set_font_size(False)
-    table.set_fontsize(5)
-    # table.auto_set_column_width((-1, 0, 1, 2, 3))
+        final_data = [xs, ys]
+        table = temperature_regime_duration_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
+                                                           bbox=[0.0, -0.45, 1, .28])
+        temperature_regime_duration_graph_fig.subplots_adjust(bottom=0.3)
+        table.auto_set_font_size(False)
+        table.set_fontsize(5)
+        # table.auto_set_column_width((-1, 0, 1, 2, 3))
 
-    for (row, col), cell in table.get_celld().items():
-        if row == 0:
-            cell.set_text_props(fontproperties=FontProperties(weight='normal', size=4))
+        for (row, col), cell in table.get_celld().items():
+            if row == 0:
+                cell.set_text_props(fontproperties=FontProperties(weight='normal', size=4))
 
-    for key, cell in table.get_celld().items():
-        cell.set_linewidth(0.1)
+        for key, cell in table.get_celld().items():
+            cell.set_linewidth(0.1)
 
-    temperature_regime_duration_graph_ax.set(xlabel='t ℃ (вісь Х)', ylabel='год. (вісь У)',
-                                             title='Тривалість температурних режимів')
-    temperature_regime_duration_graph_ax.grid()
-    temperature_regime_duration_graph_ax.bar(xs, ys)
+        temperature_regime_duration_graph_ax.set(xlabel='t ℃ (вісь Х)', ylabel='год. (вісь У)',
+                                                 title='Тривалість температурних режимів')
+        temperature_regime_duration_graph_ax.grid()
+        temperature_regime_duration_graph_ax.bar(xs, ys)
 
 
 def animate_windrose_graph(i):
     all_data_map=data_service.get_all_data_map()
     is_active = data_service.get_active()
     if is_active == "1_3":
-        data_service.update_all_data_map()
+        data_service.update_all_data_map(data_service.get_start_date(), data_service.get_end_date())
 
-    ws = my_service.restore_lost_data(all_data_map['FF'])
-    wd = my_service.restore_lost_data(all_data_map['dd'])
+        ws = my_service.restore_lost_data(all_data_map['FF'])
+        wd = my_service.restore_lost_data(all_data_map['dd'])
 
-    ws_scale_1 = tab1_service.map_speed_to_scale_one(ws)
-    wd = tab1_service.map_compass_to_degrees(wd)
+        ws_scale_1 = tab1_service.map_speed_to_scale_one(ws)
+        wd = tab1_service.map_compass_to_degrees(wd)
 
-    # hide axes
-    windrose_graph_fig.patch.set_visible(False)
-    windrose_graph_ax.axis('off')
-    windrose_graph_ax.axis('tight')
+        # hide axes
+        windrose_graph_fig.patch.set_visible(False)
+        windrose_graph_ax.axis('off')
+        windrose_graph_ax.axis('tight')
 
-    ws_frequency_map = tab1_service.map_ws_by_frequency(ws)
-    final_data = [list(ws_frequency_map.keys()), list(ws_frequency_map.values())]
-    table = windrose_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
-                                    rowLabels=[" м/с ", " % "], bbox=[0., 0., 0.23, .28])
-    windrose_graph_fig.subplots_adjust(bottom=0.6)
-    table.auto_set_font_size(False)
-    table.set_fontsize(7)
-    for (row, col), cell in table.get_celld().items():
-        if row == 0:
-            cell.set_text_props(fontproperties=FontProperties(weight='normal', size=7))
-    for key, cell in table.get_celld().items():
-        cell.set_linewidth(0.5)
+        ws_frequency_map = tab1_service.map_ws_by_frequency(ws)
+        final_data = [list(ws_frequency_map.keys()), list(ws_frequency_map.values())]
+        table = windrose_graph_ax.table(cellText=final_data, loc='top', cellLoc='center',
+                                        rowLabels=[" м/с ", " % "], bbox=[0., 0., 0.23, .28])
+        windrose_graph_fig.subplots_adjust(bottom=0.6)
+        table.auto_set_font_size(False)
+        table.set_fontsize(7)
+        for (row, col), cell in table.get_celld().items():
+            if row == 0:
+                cell.set_text_props(fontproperties=FontProperties(weight='normal', size=7))
+        for key, cell in table.get_celld().items():
+            cell.set_linewidth(0.5)
 
-    # windrose_graph_fig.clear()
-    rect = [0.1, 0.1, 0.8, 0.8]
-    wa = WindroseAxes(windrose_graph_fig, rect)
-    windrose_graph_fig.add_axes(wa)
-    windrose_graph_ax.grid()
-    wa.bar(wd, ws_scale_1, normed=True, opening=0.8, edgecolor='white')
-    # wa.set_legend()
-    wa.set_legend(title="інтенсивність", loc="upper right")
+        # windrose_graph_fig.clear()
+        rect = [0.1, 0.1, 0.8, 0.8]
+        wa = WindroseAxes(windrose_graph_fig, rect)
+        windrose_graph_fig.add_axes(wa)
+        windrose_graph_ax.grid()
+        wa.bar(wd, ws_scale_1, normed=True, opening=0.8, edgecolor='white')
+        # wa.set_legend()
+        wa.set_legend(title="інтенсивність", loc="upper right")
 
 
 def animate_wind_duration_graph(i):
     all_data_map=data_service.get_all_data_map()
     is_active = data_service.get_active()
     if is_active == "1_4":
-        data_service.update_all_data_map()
+        data_service.update_all_data_map(data_service.get_start_date(), data_service.get_end_date())
 
-    map_t_freq = tab1_service.map_wind_duration(all_data_map)
-    xs = list(map_t_freq.keys())
-    ys = list(map_t_freq.values())
-    wind_duration_graph_ax.clear()
-    wind_duration_graph_ax.set(xlabel='м/с (вісь Х)', ylabel='год. (вісь У)',
-                               title='Тривалість режимів вітрової активності вітрів ')
-    wind_duration_graph_ax.grid()
-    wind_duration_graph_ax.bar(xs, ys)
+        map_t_freq = tab1_service.map_wind_duration(all_data_map)
+        xs = list(map_t_freq.keys())
+        ys = list(map_t_freq.values())
+        wind_duration_graph_ax.clear()
+        wind_duration_graph_ax.set(xlabel='м/с (вісь Х)', ylabel='год. (вісь У)',
+                                   title='Тривалість режимів вітрової активності вітрів ')
+        wind_duration_graph_ax.grid()
+        wind_duration_graph_ax.bar(xs, ys)
 
 
 def animate_insolation_graph(i):
@@ -153,14 +153,14 @@ def animate_insolation_graph(i):
     if is_active == "1_5":
         data_service.update_cut_bank_muni_ap_map()
 
-    xs = (cut_bank_muni_ap_map['fullDate'])
-    ys = (cut_bank_muni_ap_map['etrn'])
-    # date = [item.date() for item in xs]
-    solar_insolation_graph_ax.clear()
-    solar_insolation_graph_ax.set(xlabel='дата (вісь Х)', ylabel='Вт/м² (вісь У)',
-                                  title='Інтенсивність сонячної інсоляції ')
-    solar_insolation_graph_ax.grid()
-    solar_insolation_graph_ax.bar(xs, ys, width=0.3)
+        xs = (cut_bank_muni_ap_map['fullDate'])
+        ys = (cut_bank_muni_ap_map['etrn'])
+        # date = [item.date() for item in xs]
+        solar_insolation_graph_ax.clear()
+        solar_insolation_graph_ax.set(xlabel='дата (вісь Х)', ylabel='Вт/м² (вісь У)',
+                                      title='Інтенсивність сонячної інсоляції ')
+        solar_insolation_graph_ax.grid()
+        solar_insolation_graph_ax.bar(xs, ys, width=0.3)
 
 
 def animate_solar_activity_duration_graph(i):
@@ -169,14 +169,14 @@ def animate_solar_activity_duration_graph(i):
     if is_active == "1_6":
         data_service.update_cut_bank_muni_ap_map()
 
-    map_t_freq = tab1_service.map_solar_activity_duration(cut_bank_muni_ap_map)
-    xs = list(map_t_freq.keys())
-    ys = list(map_t_freq.values())
-    solar_duration_graph_ax.clear()
-    solar_duration_graph_ax.set(xlabel='Вт/м² (вісь Х)', ylabel='год. (вісь У)',
-                                title='Тривалість режимів сонячної активності')
-    solar_duration_graph_ax.grid()
-    solar_duration_graph_ax.bar(xs, ys)
+        map_t_freq = tab1_service.map_solar_activity_duration(cut_bank_muni_ap_map)
+        xs = list(map_t_freq.keys())
+        ys = list(map_t_freq.values())
+        solar_duration_graph_ax.clear()
+        solar_duration_graph_ax.set(xlabel='Вт/м² (вісь Х)', ylabel='год. (вісь У)',
+                                    title='Тривалість режимів сонячної активності')
+        solar_duration_graph_ax.grid()
+        solar_duration_graph_ax.bar(xs, ys)
 
 
 
