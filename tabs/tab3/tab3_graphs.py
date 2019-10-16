@@ -24,15 +24,18 @@ prices_graph_ax = prices_graph_fig.add_subplot(111)
 warmer_prices_graph_fig = Figure()
 warmer_prices_graph_ax = warmer_prices_graph_fig.add_subplot(111)
 
+
 def animate_Q_waste_graph(i):
     all_data_map = data_service.get_all_data_map()
     is_active = data_service.get_active()
     print("animate active is ", is_active)
     if is_active == "3_1":
+        print("dateeee" , data_service.get_date_tab3_interval())
         data_service.update_all_data_map(data_service.get_date_tab3_interval()[0],
                                          data_service.get_date_tab3_interval()[1])
 
         plot_data = tab3_service.get_all_needed_Q_for_warming_less_than_desired(all_data_map)
+        print("3-1 data:", plot_data)
         xs = my_service.restore_lost_data(plot_data[0])
         ys = my_service.restore_lost_data(plot_data[1])
         Q_waste_graph_ax.clear()
@@ -152,15 +155,15 @@ class Tab3Page(tk.Frame):
         graph1_btn.config(font=my_view.CONSOLE_FONT_12)
         graph1_btn.pack(pady=5, padx=5)
 
-        graph1_btn = tk.Button(self, text="Затрати на опалення відносно температур",
-                               width=50, bg='lightgreen', fg='blue', relief='flat',
-                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
-                               highlightbackground="#37d3ff", borderwidth=4,
-                               command=lambda: data_service.display_graph_and_set_active(controller,
-                                                                                         Tab3Graph2_Prices,
-                                                                                         "3_2"))
-        graph1_btn.config(font=my_view.CONSOLE_FONT_12)
-        graph1_btn.pack(pady=5, padx=5)
+        # graph1_btn = tk.Button(self, text="Затрати на опалення відносно температур",
+        #                        width=50, bg='lightgreen', fg='blue', relief='flat',
+        #                        bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+        #                        highlightbackground="#37d3ff", borderwidth=4,
+        #                        command=lambda: data_service.display_graph_and_set_active(controller,
+        #                                                                                  Tab3Graph2_Prices,
+        #                                                                                  "3_2"))
+        # graph1_btn.config(font=my_view.CONSOLE_FONT_12)
+        # graph1_btn.pack(pady=5, padx=5)
 
         graph1_btn = tk.Button(self, text="Витрати енергії на опалення за визначений період",
                                width=50, bg='lightgreen', fg='blue', relief='flat',
