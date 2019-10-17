@@ -89,9 +89,9 @@ if __name__ == '__main__':
     ####################################################################################################################
 
 
-    _2_1_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_graph_fig,
-                                             tab2_graphs.animate_2_1_graph,
-                                             interval=3000)
+    _2_1_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_1_graph_fig,
+                                             tab2_graphs.animate_2_1_1_graph,
+                                             interval=20000)
 
 
     app.mainloop()

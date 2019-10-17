@@ -401,18 +401,23 @@ def set_tab3_data(n_people, s, n_dush, n_vann, t_desired, startdate, enddate):
 #################  tab 2 #################
 
 class EnergyConsumptionDevice:
-    def __init__(self, consum_power, usage_time_list, quantity):
+    def __init__(self, consum_power, week_list, quantity):
         self.consum_power = consum_power
-        self.week_list = usage_time_list
+        self.week_list = week_list
         self.quantity = quantity
 
+
+time_range = np.array([datetime.datetime(datetime.date.today().year,
+                                         datetime.date.today().month,
+                                         datetime.date.today().day,
+                                         i, 0) for i in range(24)])
 
 electric_consumption_devices = dict()
 electric_consumption_devices['fridge'] = EnergyConsumptionDevice(0.3 * 10 ** 3, ["fulltime"], 1)
 electric_consumption_devices['cooker'] = EnergyConsumptionDevice(3.5 * 10 ** 3, ["8:00", "14:00", "18:00"], 1)
 electric_consumption_devices['microwave'] = EnergyConsumptionDevice(2.2 * 10 ** 3, ["11:00", "16:00"], 1)
 electric_consumption_devices['4nyk'] = EnergyConsumptionDevice(2 * 10 ** 3,
-                                                               ["8:20", "11:20", "14:20", "16:20", "18:20"], 1)
+                                                               ["9:00", "12:00", "14:00", "17:00", "19:0"], 1)
 electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 3, ["19:00", "20:00", "21:00", "22:00"],
                                                                    1)
 
@@ -420,3 +425,6 @@ def get_electric_consumption_devices():
     global electric_consumption_devices
     print("DEVICES:", electric_consumption_devices)
     return electric_consumption_devices
+
+
+electric_consumption_graphs = list()

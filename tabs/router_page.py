@@ -56,7 +56,7 @@ class WelcomePage(tk.Frame):
         label.configure(background='black', foreground='lightblue')
 
         button1 = tk.Button(self, text="1.Аналіз метеорологічних даних регіону",
-                            width=40, bg='lightgreen', fg='blue', relief='flat',
+                            width=50, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
                             command=lambda: controller.show_frame(tab1_graphs.Tab1Page))
@@ -64,7 +64,7 @@ class WelcomePage(tk.Frame):
         button1.pack(pady=5, padx=5)
 
         button1 = tk.Button(self, text="2.Моделювання графіка електричного навантаження",
-                            width=40, bg='lightgreen', fg='blue', relief='flat',
+                            width=50, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
                             command=lambda: controller.show_frame(tab2_graphs.Tab2Page))
@@ -72,7 +72,7 @@ class WelcomePage(tk.Frame):
         button1.pack(pady=5, padx=5)
 
         button1 = tk.Button(self, text="3.Теплотехнічні характеристики будівлі",
-                            width=40, bg='lightgreen', fg='blue', relief='flat',
+                            width=50, bg='lightgreen', fg='blue', relief='flat',
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
                             command=lambda: controller.show_frame(tab3_graphs.Tab3Page))
@@ -80,7 +80,7 @@ class WelcomePage(tk.Frame):
         button1.pack(pady=5, padx=5)
 
         button_exit = tk.Button(self, text="вихід",
-                                width=40, bg='red', fg='black', relief='flat',
+                                width=25, bg='red', fg='black', relief='flat',
                                 bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                                 highlightbackground="#37d3ff", borderwidth=4,
                                 command=quit)

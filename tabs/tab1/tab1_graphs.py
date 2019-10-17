@@ -40,7 +40,7 @@ solar_duration_graph_ax = solar_duration_graph_fig.add_subplot(111)
 
 
 def animate_temperature_graph(i):
-    all_data_map=data_service.get_all_data_map()
+    all_data_map = data_service.get_all_data_map()
     is_active = data_service.get_active()
     print("a", is_active)
     if is_active == "1_1":
