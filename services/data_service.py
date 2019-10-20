@@ -417,9 +417,10 @@ electric_consumption_devices['fridge'] = EnergyConsumptionDevice(0.3 * 10 ** 3, 
 electric_consumption_devices['cooker'] = EnergyConsumptionDevice(3.5 * 10 ** 3, ["8:00", "14:00", "18:00"], 1)
 electric_consumption_devices['microwave'] = EnergyConsumptionDevice(2.2 * 10 ** 3, ["11:00", "16:00"], 1)
 electric_consumption_devices['teapot'] = EnergyConsumptionDevice(2 * 10 ** 3,
-                                                               ["9:00", "12:00", "14:00", "17:00", "19:0"], 1)
+                                                                 ["9:00", "12:00", "14:00", "17:00", "19:0"], 1)
 electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 3, ["19:00", "20:00", "21:00", "22:00"],
                                                                    1)
+
 
 def get_electric_consumption_devices():
     global electric_consumption_devices
@@ -444,6 +445,8 @@ def set_tab2_optimized(s):
 
 
 koef_optimized = 1
+
+
 def get_koef_optimized():
     global koef_optimized
     if get_tab2_optimized():
@@ -456,5 +459,20 @@ def get_koef_optimized():
 def set_tab2_data(n_people, is_optimized):
     set_n_people(n_people)
     set_tab2_optimized(is_optimized)
+
+
+# "Sn","Mn","Tu","Wd","Th","Fr","Sa"
+tab2_day_of_week = "Mn"
+
+
+def get_tab2_day_of_week():
+    global tab2_day_of_week
+    return tab2_day_of_week
+
+
+def set_tab2_day_of_week(s):
+    global tab2_day_of_week
+    tab2_day_of_week = s
+
 
 

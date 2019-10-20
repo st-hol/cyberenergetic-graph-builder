@@ -44,6 +44,7 @@ class Application(tk.Tk):
                       tab2_graphs.Tab2Graph4,
                       tab2_graphs.Tab2Graph5,
                       tab2_graphs.GetInputTab2Frame,
+                      tab2_graphs.Tab2Graph6,
 
                       tab3_graphs.Tab3Page,
                       tab3_graphs.GetInputTab3Frame,
@@ -85,9 +86,9 @@ if __name__ == '__main__':
     Q_waste_graph_ani = animation.FuncAnimation(tab3_graphs.Q_waste_graph_fig,
                                                 tab3_graphs.animate_Q_waste_graph,
                                                 interval=3000)
-    prices_graph_ani = animation.FuncAnimation(tab3_graphs.prices_graph_fig,
-                                               tab3_graphs.animate_price_bar_graph,
-                                               interval=3000)
+    # prices_graph_ani = animation.FuncAnimation(tab3_graphs.prices_graph_fig,
+    #                                            tab3_graphs.animate_price_bar_graph,
+    #                                            interval=3000)
     warmer_prices_graph_ani = animation.FuncAnimation(tab3_graphs.warmer_prices_graph_fig,
                                                       tab3_graphs.animate_warmer_price_bar_graph,
                                                       interval=3000)
@@ -112,6 +113,10 @@ if __name__ == '__main__':
 
     _2_1_5_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_5_graph_fig,
                                                tab2_graphs.animate_2_1_5_graph,
+                                               interval=5000)
+    ##
+    _2_2_graph_ani = animation.FuncAnimation(tab2_graphs._2_2_graph_fig,
+                                               tab2_graphs.animate_2_2_graph,
                                                interval=5000)
 
     app.mainloop()

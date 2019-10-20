@@ -63,11 +63,30 @@ def sum_all_W_from_devices():
 
 def populate_p_ser():
     W_all = sum_all_W_from_devices() * math.fabs(float(kfc_y2))
-    print("wwww--", W_all)
     return W_all
 
 def populate_p_max():
     W_all = sum_all_W_from_devices()
-    print("wwww-----------", W_all)
     return W_all
+
+
+################################################
+
+def get_all_devices_consumption_that_day():
+    devices = data_service.get_electric_consumption_devices()
+
+    all_time = list(data_service.time_range)
+    all_cons_map = dict.fromkeys(all_time, 0)
+
+    for device_name, device_entity in devices.items():
+        # device_time = list(get_usage_times(device_name))
+        intersected_map_of_usage = intersected_map_of_device_usage(device_entity)
+        for t, Wt in intersected_map_of_usage.items():
+            # if t in device_time:
+            all_cons_map[t] += intersected_map_of_usage[t]
+    # print("AALLLLLL", all_cons_map.values())
+    return all_cons_map
+
+
+
 
