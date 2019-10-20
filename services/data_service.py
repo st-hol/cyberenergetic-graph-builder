@@ -6,7 +6,7 @@ import datetime
 import os
 import re
 
-import services.tab1_service as tab1_service
+import services.tab2_service as tab2_service
 import services.util_service as util_service
 
 
@@ -305,7 +305,7 @@ def get_n_people():
 
 def set_n_people(s):
     global n_people
-    n_people = s
+    n_people = int(s)
     print(n_people)
 
 
@@ -319,7 +319,7 @@ def get_S():
 
 def set_S(s):
     global S
-    S = s
+    S = float(s)
     print(S)
 
 
@@ -333,7 +333,7 @@ def get_n_vann():
 
 def set_n_vann(s):
     global n_vann
-    n_vann = s
+    n_vann = int(s)
     print(n_vann)
 
 
@@ -347,7 +347,7 @@ def get_n_dush():
 
 def set_n_dush(s):
     global n_dush
-    n_dush = s
+    n_dush = int(s)
     print(n_dush)
 
 
@@ -361,7 +361,7 @@ def get_temperature_desired():
 
 def set_temperature_desired(s):
     global temperature_desired
-    temperature_desired = s
+    temperature_desired = float(s)
     print(temperature_desired)
 
 
@@ -416,7 +416,7 @@ electric_consumption_devices = dict()
 electric_consumption_devices['fridge'] = EnergyConsumptionDevice(0.3 * 10 ** 3, ["fulltime"], 1)
 electric_consumption_devices['cooker'] = EnergyConsumptionDevice(3.5 * 10 ** 3, ["8:00", "14:00", "18:00"], 1)
 electric_consumption_devices['microwave'] = EnergyConsumptionDevice(2.2 * 10 ** 3, ["11:00", "16:00"], 1)
-electric_consumption_devices['4nyk'] = EnergyConsumptionDevice(2 * 10 ** 3,
+electric_consumption_devices['teapot'] = EnergyConsumptionDevice(2 * 10 ** 3,
                                                                ["9:00", "12:00", "14:00", "17:00", "19:0"], 1)
 electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 3, ["19:00", "20:00", "21:00", "22:00"],
                                                                    1)
@@ -427,4 +427,34 @@ def get_electric_consumption_devices():
     return electric_consumption_devices
 
 
-electric_consumption_graphs = list()
+tab2_optimized = True
+
+
+def get_tab2_optimized():
+    global tab2_optimized
+    return tab2_optimized
+
+
+def set_tab2_optimized(s):
+    global tab2_optimized
+    if s == "+":
+        tab2_optimized = True
+    else:
+        tab2_optimized = False
+
+
+koef_optimized = 1
+def get_koef_optimized():
+    global koef_optimized
+    if get_tab2_optimized():
+        koef_optimized = tab2_service.calc_koef_optimized()
+    else:
+        koef_optimized = 1
+    return koef_optimized
+
+
+def set_tab2_data(n_people, is_optimized):
+    set_n_people(n_people)
+    set_tab2_optimized(is_optimized)
+
+
