@@ -11,7 +11,7 @@ kfc_y2 = 0.77
 
 def get_usage_times(device):
     times = []
-    cur_device_usage_time_list = device.week_list
+    cur_device_usage_time_list = device.week_list[data_service.get_tab2_day_of_week()]
     for time in cur_device_usage_time_list:
         if time == "fulltime":
             times = data_service.time_range.copy()
@@ -88,5 +88,14 @@ def get_all_devices_consumption_that_day():
     return all_cons_map
 
 
+def get_all_devices_sum_of_consumption_for_each_day():
+    days_of_week = ["Mn","Tu","Wd","Th","Fr","Sa","Sn"]
+    map_day_Wt = dict.fromkeys(days_of_week, 0)
+    for day in days_of_week:
+        data_service.set_tab2_day_of_week(day)
+        all_cons_map = get_all_devices_consumption_that_day()
+        sum_cons = sum(list(all_cons_map.values()))
+        map_day_Wt[day] = sum_cons
+    return map_day_Wt
 
 

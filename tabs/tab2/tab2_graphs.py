@@ -8,7 +8,6 @@ from matplotlib.dates import DateFormatter
 from matplotlib.font_manager import FontProperties
 import matplotlib.pyplot as plt
 
-
 import view.custom_view as my_view
 import tabs.router_page as router
 import services.data_service as data_service
@@ -16,9 +15,7 @@ import services.tab2_service as tab2_service
 
 import services.util_service as my_service
 
-
 plt.rcParams.update({'font.size': 8})
-
 
 # 2_1_1
 _2_1_1_graph_fig = Figure()
@@ -257,16 +254,42 @@ class Tab2Graph6(tk.Frame):
         is_active = data_service.get_active()
         if is_active != "2_2":
             data_service.set_active("2_2")
-        form_tab2_subtab(self, controller, _2_2_graph_fig)
+        form_tab2_subtab_for_full_day(self, controller, _2_2_graph_fig)
 
 
-# todo all_Wt_from all device
-# todo random week graph
-###############################
+#################################
+
+# 2_3
+_2_3_graph_fig = Figure()
+_2_3_graph_ax = _2_3_graph_fig.add_subplot(111)
+
+
+def animate_2_3_graph(i):
+    is_active = data_service.get_active()
+    print("a", is_active)
+    if is_active == "2_3":
+        map_day_Wt = tab2_service.get_all_devices_sum_of_consumption_for_each_day()
+        xs = list(map_day_Wt.keys())
+        ys = list(map_day_Wt.values())
+        _2_3_graph_ax.clear()
+        _2_3_graph_ax.set(xlabel='день', ylabel='W, Вт',
+                          title='Тижневий графік навантаження ')
+        _2_3_graph_ax.grid()
+        _2_3_graph_ax.plot(xs, ys,
+                           linestyle='-', linewidth='2',
+                           markersize=4)
+
+
+class Tab2Graph7(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        is_active = data_service.get_active()
+        if is_active != "2_3":
+            data_service.set_active("2_3")
+        form_tab2_subtab(self, controller, _2_3_graph_fig)
 
 
 def form_tab2_subtab_for_1_graph(frame, controller, figure):
-
     # all_measured_devices = list(data_service.get_electric_consumption_devices().keys())
     # all_measured_devices_graphs = [Tab2Graph1,
     #                                Tab2Graph2,
@@ -290,29 +313,29 @@ def form_tab2_subtab_for_1_graph(frame, controller, figure):
                     command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph5, "2_1_5"))
     btn.pack(side=tk.RIGHT)
 
-####
+    ####
     btn = tk.Button(frame, text="пн", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph1, "2_1_1"))
+                    command=lambda: data_service.set_tab2_day_of_week("Mn"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="вт", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph2, "2_1_2"))
+                    command=lambda: data_service.set_tab2_day_of_week("Tu"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="ср", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph3, "2_1_3"))
+                    command=lambda: data_service.set_tab2_day_of_week("Wd"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="чт", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph4, "2_1_4"))
+                    command=lambda: data_service.set_tab2_day_of_week("Th"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="пт", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph5, "2_1_5"))
+                    command=lambda: data_service.set_tab2_day_of_week("Fr"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="сб", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph5, "2_1_5"))
+                    command=lambda: data_service.set_tab2_day_of_week("Sa"))
     btn.pack(side=tk.LEFT)
     btn = tk.Button(frame, text="нд", width=4, bg='black', fg='green',
-                    command=lambda: data_service.display_graph_and_set_active(controller, Tab2Graph5, "2_1_5"))
+                    command=lambda: data_service.set_tab2_day_of_week("Sn"))
     btn.pack(side=tk.LEFT)
-####
+    ####
 
     button_to_main = tk.Button(frame, text="на головну", width=40,
                                command=lambda: data_service.display_graph_and_set_active(controller,
@@ -325,6 +348,50 @@ def form_tab2_subtab_for_1_graph(frame, controller, figure):
                                                                                          Tab2Page,
                                                                                          "DISABLED"))
     button_go_back.pack()
+
+    canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
+    canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+    toolbar = NavigationToolbar2Tk(canvas, frame)
+    toolbar.update()
+    canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+def form_tab2_subtab_for_full_day(frame, controller, figure):
+    button_to_main = tk.Button(frame, text="на головну", width=40,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                         router.WelcomePage,
+                                                                                         "DISABLED"))
+    button_to_main.pack()
+
+    button_go_back = tk.Button(frame, text="назад", width=40,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                         Tab2Page,
+                                                                                         "DISABLED"))
+    button_go_back.pack()
+
+    ####
+    btn = tk.Button(frame, text="пн", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Mn"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="вт", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Tu"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="ср", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Wd"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="чт", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Th"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="пт", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Fr"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="сб", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Sa"))
+    btn.pack(side=tk.LEFT)
+    btn = tk.Button(frame, text="нд", width=4, bg='black', fg='green',
+                    command=lambda: data_service.set_tab2_day_of_week("Sn"))
+    btn.pack(side=tk.LEFT)
+    ####
 
     canvas = FigureCanvasTkAgg(figure, frame)  # canvas.show()
     canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
@@ -378,6 +445,16 @@ class Tab2Page(tk.Frame):
                                command=lambda: data_service.display_graph_and_set_active(controller,
                                                                                          Tab2Graph6,
                                                                                          "2_2"))
+        graph1_btn.config(font=my_view.CONSOLE_FONT_12)
+        graph1_btn.pack(pady=5, padx=5)
+
+        graph1_btn = tk.Button(self, text="Тижневий графік навантаження",
+                               width=50, bg='lightgreen', fg='blue', relief='flat',
+                               bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                               highlightbackground="#37d3ff", borderwidth=4,
+                               command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                         Tab2Graph7,
+                                                                                         "2_3"))
         graph1_btn.config(font=my_view.CONSOLE_FONT_12)
         graph1_btn.pack(pady=5, padx=5)
 

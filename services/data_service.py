@@ -413,13 +413,52 @@ time_range = np.array([datetime.datetime(datetime.date.today().year,
                                          i, 0) for i in range(24)])
 
 electric_consumption_devices = dict()
-electric_consumption_devices['fridge'] = EnergyConsumptionDevice(0.3 * 10 ** 3, ["fulltime"], 1)
-electric_consumption_devices['cooker'] = EnergyConsumptionDevice(3.5 * 10 ** 3, ["8:00", "14:00", "18:00"], 1)
-electric_consumption_devices['microwave'] = EnergyConsumptionDevice(2.2 * 10 ** 3, ["11:00", "16:00"], 1)
+electric_consumption_devices['fridge'] = EnergyConsumptionDevice(0.3 * 10 ** 3,
+                                                                 {"Mn": ["fulltime"],
+                                                                  "Tu": ["fulltime"],
+                                                                  "Wd": ["fulltime"],
+                                                                  "Th": ["fulltime"],
+                                                                  "Fr": ["fulltime"],
+                                                                  "Sa": ["fulltime"],
+                                                                  "Sn": ["fulltime"]
+                                                                  }, 1)
+electric_consumption_devices['cooker'] = EnergyConsumptionDevice(3.5 * 10 ** 3,
+                                                                 {"Mn": ["8:00", "14:00", "18:00"],
+                                                                  "Tu": ["9:00", "14:00", "16:00"],
+                                                                  "Wd": ["10:00", "14:00", "18:00"],
+                                                                  "Th": ["10:00", "16:00", "19:00"],
+                                                                  "Fr": ["9:00", "14:00", "20:00"],
+                                                                  "Sa": ["8:00", "10:00", "14:00", "18:00"],
+                                                                  "Sn": ["8:00", "12:00", "14:00", "18:00"]
+                                                                  }, 1)
+
+electric_consumption_devices['microwave'] = EnergyConsumptionDevice(2.2 * 10 ** 3,
+                                                                    {"Mn": ["11:00", "16:00"],
+                                                                     "Tu": ["12:00", "18:00"],
+                                                                     "Wd": ["11:00", "18:00"],
+                                                                     "Th": ["10:00", "17:00"],
+                                                                     "Fr": ["9:00", "15:00"],
+                                                                     "Sa": ["9:00", "16:00", "17:00"],
+                                                                     "Sn": ["9:00", "11:00", "16:00", "19:00"]
+                                                                     }, 1)
 electric_consumption_devices['teapot'] = EnergyConsumptionDevice(2 * 10 ** 3,
-                                                                 ["9:00", "12:00", "14:00", "17:00", "19:0"], 1)
-electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 3, ["19:00", "20:00", "21:00", "22:00"],
-                                                                   1)
+                                                                 {"Mn": ["8:00", "13:00", "14:00", "14:00", "18:00"],
+                                                                  "Tu": ["8:00", "12:00", "14:00", "17:00", "19:00"],
+                                                                  "Wd": ["6:00", "14:00", "14:00", "16:00", "20:00"],
+                                                                  "Th": ["7:00", "10:00", "16:00", "18:00", "19:00"],
+                                                                  "Fr": ["9:00", "12:00", "14:00", "17:00", "19:00"],
+                                                                  "Sa": ["12:00", "12:00", "14:00", "15:00", "21:00"],
+                                                                  "Sn": ["9:00", "12:00", "14:00", "17:00", "23:00"]
+                                                                  }, 1)
+electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 3,
+                                                                   {"Mn": ["19:00", "20:00", "22:00"],
+                                                                    "Tu": ["13:00"],
+                                                                    "Wd": ["12:00", "20:00", "22:00"],
+                                                                    "Th": ["15:00", "20:00", "21:00", "23:00"],
+                                                                    "Fr": ["16:00", "21:00", "22:00"],
+                                                                    "Sa": ["fulltime"],
+                                                                    "Sn": ["fulltime"]
+                                                                    }, 1)
 
 
 def get_electric_consumption_devices():
@@ -428,7 +467,7 @@ def get_electric_consumption_devices():
     return electric_consumption_devices
 
 
-tab2_optimized = True
+tab2_optimized = False
 
 
 def get_tab2_optimized():
@@ -473,6 +512,3 @@ def get_tab2_day_of_week():
 def set_tab2_day_of_week(s):
     global tab2_day_of_week
     tab2_day_of_week = s
-
-
-
