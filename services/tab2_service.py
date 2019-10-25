@@ -5,7 +5,6 @@ import random
 import services.data_service as data_service
 import services.util_service as my_service
 
-
 kfc_y2 = 0.77
 
 
@@ -51,7 +50,7 @@ def get_device_power_consumtion(device):
 def calc_koef_optimized():
     P_ser = populate_p_ser()
     P_max = populate_p_max()
-    k = float(P_ser/P_max)
+    k = float(P_ser / P_max)
     return k
 
 
@@ -61,9 +60,11 @@ def sum_all_W_from_devices():
         sum_all += v.consum_power
     return sum_all
 
+
 def populate_p_ser():
     W_all = sum_all_W_from_devices() * math.fabs(float(kfc_y2))
     return W_all
+
 
 def populate_p_max():
     W_all = sum_all_W_from_devices()
@@ -88,14 +89,25 @@ def get_all_devices_consumption_that_day():
     return all_cons_map
 
 
-def get_all_devices_sum_of_consumption_for_each_day():
-    days_of_week = ["Mn","Tu","Wd","Th","Fr","Sa","Sn"]
-    map_day_Wt = dict.fromkeys(days_of_week, 0)
+# def get_all_devices_sum_of_consumption_for_each_day():
+#     days_of_week = ["Mn","Tu","Wd","Th","Fr","Sa","Sn"]
+#     map_day_Wt = dict.fromkeys(days_of_week, 0)
+#     for day in days_of_week:
+#         data_service.set_tab2_day_of_week(day)
+#         all_cons_map = get_all_devices_consumption_that_day()
+#         sum_cons = sum(list(all_cons_map.values()))
+#         map_day_Wt[day] = sum_cons
+#     return map_day_Wt
+
+
+def get_all_devices_sum_of_consumption_for_each_day_by_hrs():
+    time_range_24 = data_service.time_range
+    days_of_week = ["Mn", "Tu", "Wd", "Th", "Fr", "Sa", "Sn"]
+    map_day_Wt = dict()
     for day in days_of_week:
         data_service.set_tab2_day_of_week(day)
         all_cons_map = get_all_devices_consumption_that_day()
-        sum_cons = sum(list(all_cons_map.values()))
-        map_day_Wt[day] = sum_cons
+        sum_cons = list(all_cons_map.values())
+        for time in time_range_24:
+            map_day_Wt["" + day + " " + str(time.strftime("%H:%M"))] = sum_cons[list(time_range_24).index(time)]
     return map_day_Wt
-
-

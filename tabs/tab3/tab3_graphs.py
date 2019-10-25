@@ -1,3 +1,4 @@
+#tod:ax+b
 import tkinter as tk
 import numpy as np
 import random
@@ -262,7 +263,7 @@ class GetInputTab3Frame(tk.Frame):
         label.pack(pady=3, padx=3)
         ent_N_people.pack()
 
-        label = tk.Label(self, text=("""\nЗначення площі:"""),
+        label = tk.Label(self, text=("""\nЗначення площі(м^2):"""),
                          font=my_view.CONSOLE_FONT_12)
         label.configure(background='black', foreground='green')
         label.pack(pady=3, padx=3)
@@ -280,7 +281,7 @@ class GetInputTab3Frame(tk.Frame):
         label.pack(pady=3, padx=3)
         ent_N_vann.pack()
 
-        label = tk.Label(self, text=("""\nЗначення бажаної температури:"""),
+        label = tk.Label(self, text=("""\nЗначення бажаної температури (℃):"""),
                          font=my_view.CONSOLE_FONT_12)
         label.configure(background='black', foreground='green')
         label.pack(pady=3, padx=3)

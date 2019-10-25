@@ -27,6 +27,7 @@ class Application(tk.Tk):
         all_frames = (welcome.PreWelcomePage,
                       welcome.WelcomePage,
                       welcome.DataInfoPage,
+
                       tab1_graphs.Tab1Page,
                       tab1_graphs.GetInput1Frame,
                       tab1_graphs.GetInput2Frame,
@@ -44,6 +45,7 @@ class Application(tk.Tk):
                       tab2_graphs.Tab2Graph4,
                       tab2_graphs.Tab2Graph5,
                       tab2_graphs.GetInputTab2Frame,
+                      tab2_graphs.GetInputTimeUsageFrame,
                       tab2_graphs.Tab2Graph6,
                       tab2_graphs.Tab2Graph7,
 

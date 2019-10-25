@@ -16,6 +16,7 @@ import services.tab2_service as tab2_service
 import services.util_service as my_service
 
 plt.rcParams.update({'font.size': 8})
+plt.xticks(rotation=90)
 
 # 2_1_1
 _2_1_1_graph_fig = Figure()
@@ -268,13 +269,18 @@ def animate_2_3_graph(i):
     is_active = data_service.get_active()
     print("a", is_active)
     if is_active == "2_3":
-        map_day_Wt = tab2_service.get_all_devices_sum_of_consumption_for_each_day()
+        # map_day_Wt = tab2_service.get_all_devices_sum_of_consumption_for_each_day()
+        map_day_Wt = tab2_service.get_all_devices_sum_of_consumption_for_each_day_by_hrs()
         xs = list(map_day_Wt.keys())
         ys = list(map_day_Wt.values())
+
         _2_3_graph_ax.clear()
-        _2_3_graph_ax.set(xlabel='день', ylabel='W, Вт',
+        _2_3_graph_ax.set(xlabel='час', ylabel='W, Вт',
                           title='Тижневий графік навантаження ')
         _2_3_graph_ax.grid()
+        for tick in _2_3_graph_ax.get_xticklabels():
+            tick.set_rotation(70)
+            tick.set_fontsize(4)
         _2_3_graph_ax.plot(xs, ys,
                            linestyle='-', linewidth='2',
                            markersize=4)
@@ -527,6 +533,15 @@ class GetInputTab2Frame(tk.Frame):
                          command=lambda: data_service.set_tab2_data(N_people.get(), is_optimized.get()))
         btn1.pack(padx=5, pady=5)
 
+        button_to_set_timing = tk.Button(self, text="Вказати часові інтервали використання приладів",
+                                         width=50, bg='lightgreen', fg='blue', relief='flat',
+                                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                         highlightbackground="#37d3ff", borderwidth=4,
+                                         command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                                   GetInputTimeUsageFrame,
+                                                                                                   "DISABLED"))
+        button_to_set_timing.pack(padx=15, pady=15)
+
     # for i in range(len(all_measured_devices_graphs)):
     #     btn = tk.Button(frame, text=str(all_measured_devices[i]), width=8,
     #                     bg='black', fg='green',
@@ -534,3 +549,58 @@ class GetInputTab2Frame(tk.Frame):
     #                                                                               all_measured_devices_graphs[i],
     #                                                                               "2_1_" + str(i+1)))
     #     btn.pack(side=tk.RIGHT)
+
+
+class GetInputTimeUsageFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             router.WelcomePage,
+                                                                                             "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             Tab2Page,
+                                                                                             "DISABLED"))
+        button_go_back.pack()
+
+
+        name_of_device = tk.StringVar()
+        ent_name_of_device= tk.Entry(self, textvariable=name_of_device)
+        ent_name_of_device.insert(0, data_service.get_cur_device())
+
+        list_usage = tk.StringVar()
+        ent_list_usage = tk.Entry(self, textvariable=list_usage)
+        ent_list_usage.insert(0, ','.join(data_service.get_electric_consumption_devices()[data_service.get_cur_device()]
+                                          .week_list[data_service.get_cur_day_of_week()]))
+
+        day_of_week = tk.StringVar()
+        ent_day_of_week = tk.Entry(self, textvariable=day_of_week)
+        ent_day_of_week.insert(0, data_service.get_cur_day_of_week())
+
+        label = tk.Label(self, text=("""\nНазва приладу:(""", ','.join(list(data_service.get_electric_consumption_devices().keys())), ")"),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_name_of_device.pack()
+
+        label = tk.Label(self, text=("""\nДень використання холодильника:("Mn", "Tu", "Wd", "Th", "Fr", "Sa", "Sn")"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_day_of_week.pack()
+
+        label = tk.Label(self, text=("""\nГодини використання холодильника:(через кому або "fulltime" - для повного дня)"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_list_usage.pack()
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: data_service.set_time_for_certain_device(day_of_week.get(), name_of_device.get(), list_usage.get().split(',').copy()))
+        btn1.pack(padx=5, pady=5)

@@ -460,6 +460,28 @@ electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 
                                                                     "Sn": ["fulltime"]
                                                                     }, 1)
 
+cur_day_of_week = "Mn"
+def set_cur_day_of_week(day):
+    global cur_day_of_week
+    cur_day_of_week = day
+def get_cur_day_of_week():
+    global cur_day_of_week
+    return cur_day_of_week
+cur_device = "fridge"
+def set_cur_device(device):
+    global cur_device
+    cur_device = device
+def get_cur_device():
+    global cur_device
+    return cur_device
+def set_time_for_certain_device(day, name_device, lst):
+    global electric_consumption_devices
+    global cur_day_of_week
+    global cur_device
+    cur_device = name_device
+    cur_day_of_week = day
+    electric_consumption_devices[cur_device].week_list[cur_day_of_week] = lst
+
 
 def get_electric_consumption_devices():
     global electric_consumption_devices
@@ -468,13 +490,9 @@ def get_electric_consumption_devices():
 
 
 tab2_optimized = False
-
-
 def get_tab2_optimized():
     global tab2_optimized
     return tab2_optimized
-
-
 def set_tab2_optimized(s):
     global tab2_optimized
     if s == "+":
