@@ -582,6 +582,7 @@ class GetInputTimeUsageFrame(tk.Frame):
 
         label = tk.Label(self, text=("""\nНазва приладу:(""", ','.join(list(data_service.get_electric_consumption_devices().keys())), ")"),
                          font=my_view.CONSOLE_FONT_12)
+        
         label.configure(background='black', foreground='green')
         label.pack(pady=3, padx=3)
         ent_name_of_device.pack()

@@ -13,7 +13,6 @@ import services.util_service as my_service
 import services.data_service as data_service
 
 
-
 # 1
 temperature_graph_fig = Figure()
 temperature_graph_ax = temperature_graph_fig.add_subplot(111)

@@ -6,6 +6,7 @@ import view.custom_view as my_view
 import tabs.tab1.tab1_graphs as tab1_graphs
 import tabs.tab2.tab2_graphs as tab2_graphs
 import tabs.tab3.tab3_graphs as tab3_graphs
+import tabs.tab4.tab4_graphs as tab4_graphs
 import services.data_service as data_service
 
 # all_data_map = my_service.read_xml_all_months()
@@ -76,6 +77,14 @@ class WelcomePage(tk.Frame):
                             bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                             highlightbackground="#37d3ff", borderwidth=4,
                             command=lambda: controller.show_frame(tab3_graphs.Tab3Page))
+        button1.config(font=my_view.CONSOLE_FONT_12)
+        button1.pack(pady=5, padx=5)
+
+        button1 = tk.Button(self, text="4.Визначення ефективності впровадження\nвітроенергетичної установки для потреб\n енергозабезпечення об’єкта ",
+                            width=50, bg='lightgreen', fg='blue', relief='flat',
+                            bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                            highlightbackground="#37d3ff", borderwidth=4,
+                            command=lambda: controller.show_frame(tab4_graphs.Tab4Page))
         button1.config(font=my_view.CONSOLE_FONT_12)
         button1.pack(pady=5, padx=5)
 

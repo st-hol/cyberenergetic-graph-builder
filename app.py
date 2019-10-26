@@ -8,6 +8,8 @@ import tabs.router_page as welcome
 import tabs.tab1.tab1_graphs as tab1_graphs
 import tabs.tab2.tab2_graphs as tab2_graphs
 import tabs.tab3.tab3_graphs as tab3_graphs
+import tabs.tab4.tab4_graphs as tab4_graphs
+
 
 matplotlib.use("TkAgg")
 
@@ -53,7 +55,12 @@ class Application(tk.Tk):
                       tab3_graphs.GetInputTab3Frame,
                       tab3_graphs.Tab3Graph1_Qwaste,
                       tab3_graphs.Tab3Graph2_Prices,
-                      tab3_graphs.Tab3Graph3_WarmerPrices)
+                      tab3_graphs.Tab3Graph3_WarmerPrices,
+
+                      tab4_graphs.Tab4Page,
+                      tab4_graphs.Tab4Graph1,
+                      tab4_graphs.Tab4Graph2,
+                      tab4_graphs.GetInputTab4Frame)
 
         for F in all_frames:
             frame = F(container, self)
@@ -125,6 +132,15 @@ if __name__ == '__main__':
     _2_3_graph_ani = animation.FuncAnimation(tab2_graphs._2_3_graph_fig,
                                                tab2_graphs.animate_2_3_graph,
                                                interval=5000)
+
+
+    ############################################################################################
+    _4_1_graph_ani = animation.FuncAnimation(tab4_graphs._4_1_graph_fig,
+                                             tab4_graphs.animate_4_1_graph,
+                                             interval=5000)
+    _4_2_graph_ani = animation.FuncAnimation(tab4_graphs._4_2_graph_fig,
+                                             tab4_graphs.animate_4_2_graph,
+                                             interval=5000)
 
     app.mainloop()
 

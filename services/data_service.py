@@ -6,6 +6,7 @@ import datetime
 import os
 import re
 
+import services.tab4_service as tab4_service
 import services.tab2_service as tab2_service
 import services.util_service as util_service
 
@@ -461,19 +462,31 @@ electric_consumption_devices['computer'] = EnergyConsumptionDevice(0.25 * 10 ** 
                                                                     }, 1)
 
 cur_day_of_week = "Mn"
+
+
 def set_cur_day_of_week(day):
     global cur_day_of_week
     cur_day_of_week = day
+
+
 def get_cur_day_of_week():
     global cur_day_of_week
     return cur_day_of_week
+
+
 cur_device = "fridge"
+
+
 def set_cur_device(device):
     global cur_device
     cur_device = device
+
+
 def get_cur_device():
     global cur_device
     return cur_device
+
+
 def set_time_for_certain_device(day, name_device, lst):
     global electric_consumption_devices
     global cur_day_of_week
@@ -490,9 +503,13 @@ def get_electric_consumption_devices():
 
 
 tab2_optimized = False
+
+
 def get_tab2_optimized():
     global tab2_optimized
     return tab2_optimized
+
+
 def set_tab2_optimized(s):
     global tab2_optimized
     if s == "+":
@@ -530,3 +547,53 @@ def get_tab2_day_of_week():
 def set_tab2_day_of_week(s):
     global tab2_day_of_week
     tab2_day_of_week = s
+
+
+##############################         tab 4         ###################################################
+
+
+def set_tab4_data(h):
+    set_tab4_tower_h(h)
+
+
+tower_h = 12
+
+
+def get_tab4_tower_h():
+    global tower_h
+    return tower_h
+
+
+def set_tab4_tower_h(s):
+    global tower_h
+    tower_h = int(s)
+
+
+
+# tab4_time_dur_for_speed = [0 for i in range(int(len(dirty)/2))]
+# tab4_time_dur_for_speed
+tab4_map_speed_dur = {i: 20 for i in range(int(len(tab4_service.dirty)/2))}  # todo input
+
+def get_tab4_map_speed_dur():
+    global tab4_map_speed_dur
+    return tab4_map_speed_dur
+
+
+tab4_usual_energy_consumption = 900 #kWt
+def get_tab4_usual_energy_consumption():
+    global tab4_usual_energy_consumption
+    return tab4_usual_energy_consumption
+
+def set_tab4_usual_energy_consumption(s):
+    global tab4_usual_energy_consumption
+    tab4_usual_energy_consumption = float(s)
+
+def recalc_tab4_uec(tab4_map):
+    global tab4_usual_energy_consumption
+    total_E = tab4_service.calc_sum_energy_tab4(tab4_map)
+    consumed = 400 + float(total_E) * 0.4
+    return consumed
+
+
+
+
