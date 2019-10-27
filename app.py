@@ -60,7 +60,8 @@ class Application(tk.Tk):
                       tab4_graphs.Tab4Page,
                       tab4_graphs.Tab4Graph1,
                       tab4_graphs.Tab4Graph2,
-                      tab4_graphs.GetInputTab4Frame)
+                      tab4_graphs.GetInputTab4Frame,
+                      tab4_graphs.GetInputTimeUsageFrame)
 
         for F in all_frames:
             frame = F(container, self)

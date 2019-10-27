@@ -48,7 +48,7 @@ def animate_4_2_graph(i):
         P = list(map_tab4.values())
         E = tab4_service.calc_energy_tab4(map_tab4)
 
-        print("LLL:", len(speed), len(dur), len(P), len(E))
+        # print("LLL:", len(speed), len(dur), len(P), len(E))
 
         table_data = []
         for row_i in range(len(speed)):
@@ -59,11 +59,10 @@ def animate_4_2_graph(i):
             table_data[row_i].append(round(E[row_i], 3))
         # print(table_data)
 
-        table = _4_2_graph_ax.table(cellText=table_data, loc='center', colLabels=["швидкість вітру, м/с",
+        table = _4_2_graph_ax.table(cellText=table_data, loc='top', colLabels=["швидкість вітру, м/с",
                                                                                   "сумарна тривалість, год",
                                                                                   "Потужність ВЕУ, кВт",
                                                                                   "Вироблена Енергія, кВт*год"])
-
         table.auto_set_font_size(False)
         table.set_fontsize(12)
         for (row, col), cell in table.get_celld().items():
@@ -71,6 +70,13 @@ def animate_4_2_graph(i):
                 cell.set_text_props(fontproperties=FontProperties(weight='normal', size=10))
         for key, cell in table.get_celld().items():
             cell.set_linewidth(0.5)
+
+        table_data1 = [
+            ["Всього енергії вироблено", "%.4f" % tab4_service.calc_sum_energy_tab4(map_tab4) + " кВт*год"],
+            ["Дохід від продажу електричної енергії за «зеленим» тарифом", "%.4f" % tab4_service.calc_tab4_income_from_sell_energy(map_tab4) + " €"],
+            ["Дохід від продажу одиниць скорочення викидів (ОСВ)", "%.4f" % tab4_service.calc_tab4_income_from_OSV(map_tab4) + " €"]
+        ]
+        table1 = _4_2_graph_ax.table(cellText=table_data1, loc='bottom', cellLoc='center')
 
         # table.set_fontsize(14)
         # table.scale(1, 4)
@@ -95,25 +101,25 @@ class Tab4Graph2(tk.Frame):
             data_service.set_active("4_2")
         form_tab4_subtab(self, controller, _4_2_graph_fig)
 
-        tab4_map = tab4_service.reform_standard_speed_w_map_for_new_h()
-
-        label = tk.Label(self, text="Всього енергії вироблено: "
-                                    + "%.4f" % tab4_service.calc_sum_energy_tab4(tab4_map) + " кВт*год",
-                         font=my_view.CONSOLE_FONT_12)
-        label.configure(background='black', foreground='green')
-        label.pack(pady=3, padx=3)
-
-        label = tk.Label(self, text="Дохід від продажу електричної енергії за «зеленим» тарифом : "
-                                    + "%.4f" % tab4_service.calc_tab4_income_from_sell_energy(tab4_map) + " €",
-                         font=my_view.CONSOLE_FONT_12)
-        label.configure(background='black', foreground='green')
-        label.pack(pady=3, padx=3)
-
-        label = tk.Label(self, text="Дохід від продажу одиниць скорочення викидів (ОСВ) :"
-                                    + "%.4f" % tab4_service.calc_tab4_income_from_OSV(tab4_map) + " €",
-                         font=my_view.CONSOLE_FONT_12)
-        label.configure(background='black', foreground='green')
-        label.pack(pady=3, padx=3)
+        # tab4_map = tab4_service.reform_standard_speed_w_map_for_new_h()
+        #
+        # label = tk.Label(self, text="Всього енергії вироблено: "
+        #                             + "%.4f" % tab4_service.calc_sum_energy_tab4(tab4_map) + " кВт*год",
+        #                  font=my_view.CONSOLE_FONT_12)
+        # label.configure(background='black', foreground='green')
+        # label.pack(pady=3, padx=3)
+        #
+        # label = tk.Label(self, text="Дохід від продажу електричної енергії за «зеленим» тарифом : "
+        #                             + "%.4f" % tab4_service.calc_tab4_income_from_sell_energy(tab4_map) + " €",
+        #                  font=my_view.CONSOLE_FONT_12)
+        # label.configure(background='black', foreground='green')
+        # label.pack(pady=3, padx=3)
+        #
+        # label = tk.Label(self, text="Дохід від продажу одиниць скорочення викидів (ОСВ) :"
+        #                             + "%.4f" % tab4_service.calc_tab4_income_from_OSV(tab4_map) + " €",
+        #                  font=my_view.CONSOLE_FONT_12)
+        # label.configure(background='black', foreground='green')
+        # label.pack(pady=3, padx=3)
 
 
 def form_tab4_subtab(frame, controller, figure):
@@ -221,4 +227,58 @@ class GetInputTab4Frame(tk.Frame):
                          bd=10, highlightthickness=4, highlightcolor="#37d3ff",
                          highlightbackground="#37d3ff", borderwidth=4,
                          command=lambda: data_service.set_tab4_data(tower_h.get()))
+        btn1.pack(padx=5, pady=5)
+
+        button_to_set_timing = tk.Button(self, text="Корекція характеристики вітрової активності",
+                                         width=50, bg='lightgreen', fg='blue', relief='flat',
+                                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                         highlightbackground="#37d3ff", borderwidth=4,
+                                         command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                                   GetInputTimeUsageFrame,
+                                                                                                   "DISABLED"))
+        button_to_set_timing.pack(padx=15, pady=15)
+
+
+class GetInputTimeUsageFrame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             router.WelcomePage,
+                                                                                             "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             Tab4Page,
+                                                                                             "DISABLED"))
+        button_go_back.pack()
+
+        speed_input = tk.StringVar()
+        ent_speed_input = tk.Entry(self, textvariable=speed_input)
+        ent_speed_input.insert(0, data_service.get_tab4_last_speed())
+
+        dur_input = tk.StringVar()
+        ent_dur_input = tk.Entry(self, textvariable=dur_input)
+        ent_dur_input.insert(0, data_service.get_tab4_dur_for_this_speed())
+
+        label = tk.Label(self, text=("""\nШвидкість вітру:"""),
+                         font=my_view.CONSOLE_FONT_12)
+
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_speed_input.pack()
+
+        label = tk.Label(self, text=("""\nТривалість вітрової активності:"""),
+                         font=my_view.CONSOLE_FONT_12)
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_dur_input.pack()
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: data_service.set_tab4_speed_dur(speed_input.get(),
+                                                                         dur_input.get()))
         btn1.pack(padx=5, pady=5)

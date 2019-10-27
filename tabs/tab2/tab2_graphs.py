@@ -587,13 +587,13 @@ class GetInputTimeUsageFrame(tk.Frame):
         label.pack(pady=3, padx=3)
         ent_name_of_device.pack()
 
-        label = tk.Label(self, text=("""\nДень використання холодильника:("Mn", "Tu", "Wd", "Th", "Fr", "Sa", "Sn")"""),
+        label = tk.Label(self, text=("""\nДень використання:("Mn", "Tu", "Wd", "Th", "Fr", "Sa", "Sn")"""),
                          font=my_view.CONSOLE_FONT_12)
         label.configure(background='black', foreground='green')
         label.pack(pady=3, padx=3)
         ent_day_of_week.pack()
 
-        label = tk.Label(self, text=("""\nГодини використання холодильника:(через кому або "fulltime" - для повного дня)"""),
+        label = tk.Label(self, text=("""\nГодини використання:(через кому або "fulltime" - для повного дня)"""),
                          font=my_view.CONSOLE_FONT_12)
         label.configure(background='black', foreground='green')
         label.pack(pady=3, padx=3)

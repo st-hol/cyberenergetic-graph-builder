@@ -595,5 +595,33 @@ def recalc_tab4_uec(tab4_map):
     return consumed
 
 
+##########
+
+tab4_last_speed = 0
+def get_tab4_last_speed():
+    global tab4_last_speed
+    return tab4_last_speed
+def set_tab4_last_speed(s):
+    global tab4_last_speed
+    tab4_last_speed = float(s)
+
+def get_tab4_dur_for_this_speed():
+    global tab4_map_speed_dur
+    global tab4_last_speed
+    return tab4_map_speed_dur[tab4_last_speed]
+def set_tab4_dur_for_this_speed(s):
+    global tab4_map_speed_dur
+    global tab4_last_speed
+    tab4_map_speed_dur[tab4_last_speed] = float(s)
+
+
+def set_tab4_speed_dur(spd, dur):
+    set_tab4_last_speed(spd)
+    set_tab4_dur_for_this_speed(dur)
+
+
+
+
+
 
 
