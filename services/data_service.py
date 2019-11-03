@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import math
-import numbers
 import datetime
 import os
 import re
@@ -619,9 +617,55 @@ def set_tab4_speed_dur(spd, dur):
     set_tab4_last_speed(spd)
     set_tab4_dur_for_this_speed(dur)
 
+#############################    tab 5    #################################
+
+n_modules=1
+n_circ_nasos = 1
+n_funcoyles = 1
+power_circ_nasos = 10  # kWt
+power_funcoyles = 5  # kWt
+
+def get_tab5_n_modules():
+    global n_modules
+    return n_modules
+def get_tab5_n_circ_nasos():
+    global n_circ_nasos
+    return n_circ_nasos
+def get_tab5_n_funcoyles():
+    global n_funcoyles
+    return n_funcoyles
+def get_tab5_power_circ_nasos():
+    global power_circ_nasos
+    return power_circ_nasos
+def get_tab5_power_funcoyles():
+    global power_funcoyles
+    return power_funcoyles
+
+def set_tab5_n_modules(s):
+    global n_modules
+    n_modules = int(s)
+def set_tab5_n_circ_nasos(s):
+    global n_circ_nasos
+    n_circ_nasos = int(s)
+def set_tab5_n_funcoyles(s):
+    global n_funcoyles
+    n_funcoyles = int(s)
+def set_tab5_power_circ_nasos(s):
+    global power_circ_nasos
+    power_circ_nasos = float(s)
+def set_tab5_power_funcoyles(s):
+    global power_funcoyles
+    power_funcoyles = float(s)
+
+
+def set_tab5_data(n_modules, n_circ_nasos, n_funcoyles, power_circ_nasos, power_funcoyles):
+    set_tab5_n_modules(n_modules)
+    set_tab5_n_circ_nasos(n_circ_nasos)
+    set_tab5_n_funcoyles(n_funcoyles)
+    set_tab5_power_circ_nasos(power_circ_nasos)
+    set_tab5_power_funcoyles(power_funcoyles)
 
 
 
 
-
-
+####################################################################################

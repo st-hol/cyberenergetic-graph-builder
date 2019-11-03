@@ -9,6 +9,7 @@ import tabs.tab1.tab1_graphs as tab1_graphs
 import tabs.tab2.tab2_graphs as tab2_graphs
 import tabs.tab3.tab3_graphs as tab3_graphs
 import tabs.tab4.tab4_graphs as tab4_graphs
+import tabs.tab5.tab5_graphs as tab5_graphs
 
 
 matplotlib.use("TkAgg")
@@ -24,8 +25,6 @@ class Application(tk.Tk):
         container = my_view.obtain_container(self)
         menubar = my_view.obtain_menu(container)
         tk.Tk.config(self, menu=menubar)
-        self.frames = {}
-
         all_frames = (welcome.PreWelcomePage,
                       welcome.WelcomePage,
                       welcome.DataInfoPage,
@@ -61,7 +60,14 @@ class Application(tk.Tk):
                       tab4_graphs.Tab4Graph1,
                       tab4_graphs.Tab4Graph2,
                       tab4_graphs.GetInputTab4Frame,
-                      tab4_graphs.GetInputTimeUsageFrame)
+                      tab4_graphs.GetInputTimeUsageFrame,
+
+                      tab5_graphs.Tab5Page,
+                      tab5_graphs.GetInputTab5Frame,
+                      tab5_graphs.Tab5Graph2,
+                      tab5_graphs.Tab5Graph1
+                      )
+        self.frames = {}
 
         for F in all_frames:
             frame = F(container, self)
@@ -143,6 +149,13 @@ if __name__ == '__main__':
                                              tab4_graphs.animate_4_2_graph,
                                              interval=5000)
 
+    ############################################################################################
+    _5_1_graph_ani = animation.FuncAnimation(tab5_graphs._5_1_graph_fig,
+                                             tab5_graphs.animate_5_1_graph,
+                                             interval=5000)
+    _5_2_graph_ani = animation.FuncAnimation(tab5_graphs._5_2_graph_fig,
+                                             tab5_graphs.animate_5_2_graph,
+                                             interval=7000)  #todo =-
     app.mainloop()
 
 
