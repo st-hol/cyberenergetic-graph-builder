@@ -152,10 +152,10 @@ if __name__ == '__main__':
     ############################################################################################
     _5_1_graph_ani = animation.FuncAnimation(tab5_graphs._5_1_graph_fig,
                                              tab5_graphs.animate_5_1_graph,
-                                             interval=5000)
+                                             interval=10000)
     _5_2_graph_ani = animation.FuncAnimation(tab5_graphs._5_2_graph_fig,
                                              tab5_graphs.animate_5_2_graph,
-                                             interval=7000)  #todo =-
+                                             interval=9000)  #todo =-
     app.mainloop()
 
 

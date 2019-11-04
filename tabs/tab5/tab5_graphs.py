@@ -125,6 +125,11 @@ def animate_5_2_graph(i):
                                      bbox=[0.67, -0.13, 0.33, .05])
         # bbox - left bottom angle - x,y,width,height
 
+        table_data1 = [
+            ["COP = " + "%.2f" % (tab5_service.calc_SOR_syst())]
+        ]
+        table1 = _5_2_graph_ax.table(cellText=table_data1, loc='top', cellLoc='center',
+                                     bbox=[0.0, -0.13, 0.33, .05])
         _5_2_graph_ax.axis('off')
         _5_2_graph_ax.grid()
 

@@ -59,7 +59,7 @@ def animate_4_2_graph(i):
             table_data[row_i].append(round(E[row_i], 3))
         # print(table_data)
 
-        table = _4_2_graph_ax.table(cellText=table_data, loc='top', colLabels=["швидкість вітру, м/с",
+        table = _4_2_graph_ax.table(cellText=table_data, loc='center', colLabels=["швидкість вітру, м/с",
                                                                                   "сумарна тривалість, год",
                                                                                   "Потужність ВЕУ, кВт",
                                                                                   "Вироблена Енергія, кВт*год"])
