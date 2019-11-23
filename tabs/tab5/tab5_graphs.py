@@ -21,7 +21,8 @@ def animate_5_1_graph(i):
         map_tab5 = tab5_service.tab5_gen_data
         Ts = list(map_tab5[0])
         Hrs = list(map_tab5[1])
-        Ps = list(map_tab5[2])
+        Ps = tab5_service.calc_Ps_by_nasos()
+        # Ps = list(map_tab5[2])
         Qs = list(map_tab5[3])
 
         # print("LLL:", len(Ts), len(Hrs), len(Ps), len(Qs))
@@ -48,7 +49,7 @@ def animate_5_1_graph(i):
             cell.set_linewidth(0.5)
 
         table_data1 = [
-            ["%.2f" % sum(Qs)]
+            ["%6.2f" % sum(Qs)]
         ]
         table1 = _5_1_graph_ax.table(cellText=table_data1, loc='top', cellLoc='center',
                                      # bbox=[0.76, 0., 0.14, .05])
@@ -119,14 +120,15 @@ def animate_5_2_graph(i):
             cell.set_linewidth(0.5)
 
         table_data1 = [
-            ["%.2f" % (sum(W_cons_TN)), "%.2f" % (sum(W_cons_system)), "%.2f" % (sum(Q_tn)), "%.2f" % (sum(Q_aux_warmer))]
+            ["%6.2f" % (sum(W_cons_TN)), "%6.2f" % (sum(W_cons_system)), "%6.2f" % (sum(Q_tn)),
+             "%6.2f" % (sum(Q_aux_warmer))]
         ]
         table1 = _5_2_graph_ax.table(cellText=table_data1, loc='top', cellLoc='center',
                                      bbox=[0.67, -0.13, 0.33, .05])
         # bbox - left bottom angle - x,y,width,height
 
         table_data1 = [
-            ["COP = " + "%.2f" % (tab5_service.calc_SOR_syst())]
+            ["COP = " + "%6.2f" % (tab5_service.calc_SOR_syst())]
         ]
         table1 = _5_2_graph_ax.table(cellText=table_data1, loc='top', cellLoc='center',
                                      bbox=[0.0, -0.13, 0.33, .05])
@@ -299,3 +301,51 @@ class GetInputTab5Frame(tk.Frame):
                                                                     power_funcoyles.get()
                                                                     ))
         btn1.pack(padx=5, pady=5)
+
+        button_to_set_timing = tk.Button(self, text="Обрати тепловий насос",
+                                         width=50, bg='lightgreen', fg='blue', relief='flat',
+                                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                                         highlightbackground="#37d3ff", borderwidth=4,
+                                         command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                                   GetTN_Input,
+                                                                                                   "DISABLED"))
+        button_to_set_timing.pack(padx=15, pady=15)
+
+
+class GetTN_Input(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        button_to_main = tk.Button(self, text="на головну", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             router.WelcomePage,
+                                                                                             "DISABLED"))
+        button_to_main.pack()
+        button_go_back = tk.Button(self, text="назад", width=40,
+                                   command=lambda: data_service.display_graph_and_set_active(controller,
+                                                                                             Tab5Page,
+                                                                                             "DISABLED"))
+        button_go_back.pack()
+
+        name_of_device = tk.StringVar()
+        ent_name_of_device = tk.Entry(self, textvariable=name_of_device)
+        ent_name_of_device.insert(0, data_service.get_active_nasos_tab5())
+
+        label = tk.Label(self, text=(
+            """\nДоступні насоси:(""", ','.join(list(data_service.get_tn_map().keys())), ")"),
+                         font=my_view.CONSOLE_FONT_12)
+
+        label.configure(background='black', foreground='green')
+        label.pack(pady=3, padx=3)
+        ent_name_of_device.pack()
+
+        btn1 = tk.Button(self, text="OK",
+                         width=10, bg='lightgreen', fg='blue', relief='flat',
+                         bd=10, highlightthickness=4, highlightcolor="#37d3ff",
+                         highlightbackground="#37d3ff", borderwidth=4,
+                         command=lambda: data_service.set_active_nasos_tab5(name_of_device.get()))
+        btn1.pack(padx=5, pady=5)
+
+
+
+

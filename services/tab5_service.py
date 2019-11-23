@@ -7,6 +7,7 @@ import services.data_service as data_service
 import services.tab1_service as tab1_service
 import services.tab3_service as tab3_service
 
+j = 2.3
 
 ##data
 
@@ -30,10 +31,22 @@ tab5_gen_data = populate_tab5_general_data()
 
 ##data
 
+# todo: just note # nom_tp, nom_p_tp, nom_hp, nom_p_hp
+def calc_Ps_by_nasos():
+    active_tn = data_service.get_active_nasos_tab5()
+    p_nominal_tn = data_service.get_tn_map()[active_tn].nom_p_tp
+    Ts = tab5_gen_data[0]
+    K = calc_K_kor_ES_koef()
+    Ps = [p_nominal_tn * K[i] for i in range(len(Ts))]
+    return Ps
+def calc_Qs_by_nasos():
+    active_tn = data_service.get_active_nasos_tab5()
+    p_nominal_tn = data_service.get_tn_map()[active_tn].nom_tp
+    Ts = tab5_gen_data[0]
+    K = calc_K_Qtn_koef()
+    Qs = [p_nominal_tn * K[i] for i in range(len(Ts))]
+    return Qs
 
-def calc_sum_Q():
-    Qs = tab5_gen_data[3]
-    return sum(Qs)
 
 
 def calc_K_Qtn_koef():
@@ -74,78 +87,114 @@ def calc_K_kor_ES_koef():
     min_T = min(Ts)
     max_T = max(Ts)
     min_k = float(math.fabs(min_T) / (math.fabs(min_T) + 0.12 * math.fabs(min_T)))
-    max_k = float((math.fabs(max_T) * 0.12 + math.fabs(max_T)) / (math.fabs(max_T)))
+    max_k = float((math.fabs(max_T) * 0.87 + math.fabs(max_T)) / (math.fabs(max_T)))
 
     K_ES_list = []
 
-    T_eq_ONE_breakpoint_start = Ts.index(-12)
+    T_eq_ONE_breakpoint_start = Ts.index(5)
     T_eq_ONE_breakpoint_end = Ts.index(0)
 
-    step = float(max_k - min_k) / (len(Ts))
+    step1 = float(max_k - min_k) / (len(Ts[:T_eq_ONE_breakpoint_start]))
+    step2 = float(max_k / 4.0 - 1) / (len(Ts[T_eq_ONE_breakpoint_start:]))
 
-    print("STEP : ", step)
+    print("STEP 1: ", step1)
 
-    min_k_tmp = min_k
-    max_k_tmp = 1
-    for i in range(len(Ts)):
-        if i > T_eq_ONE_breakpoint_start and i < T_eq_ONE_breakpoint_end:
-            K_ES_list.append(1)
-        elif i <= T_eq_ONE_breakpoint_start:
-            K_ES_list.append(min_k_tmp)
-            min_k_tmp += step
-        elif i >= T_eq_ONE_breakpoint_end:
-            K_ES_list.append(max_k_tmp)
-            max_k_tmp += step
+    max_k_tmp = max_k
+    for i in range(len(Ts[:T_eq_ONE_breakpoint_start])):
+        K_ES_list.append(max_k_tmp)
+        max_k_tmp -= step1
+
+    min_k_tmp = 1
+    for i in range(len(Ts[T_eq_ONE_breakpoint_start:])):
+        K_ES_list.append(min_k_tmp)
+        max_k_tmp += step2
 
     return K_ES_list
     # return [populate_correct_coef_coldprod(t)
     #         for t in Ts]
 
 
+
+def calc_sum_Q():
+    Qs = tab5_gen_data[3]
+    return sum(Qs)
+
+
 def calc_N_blocks():
     return [data_service.get_tab5_n_modules() for t in tab5_gen_data[0]]
 
 
-CONST_NOMINAL_WARM_CONDUCTIVITY = 8.0  # kWt
-CONST_NOMINAL_COLD_CONDUCTIVITY = 7.1  # kWt
+# CONST_NOMINAL_WARM_CONDUCTIVITY = 8.0  # kWt
+# CONST_NOMINAL_COLD_CONDUCTIVITY = 7.1  # kWt
 
 
 #####
 def calc_P_consumed_TN():
     Ts = tab5_gen_data[0]
-    Ps = tab5_gen_data[2]
+    # Ps = tab5_gen_data[2]
+    Ps = calc_Ps_by_nasos()
     K = calc_K_kor_ES_koef()
+    # Ps_consumed_TN = [Ps[i] * K[i] / j for i in range(len(Ts))]
     Ps_consumed_TN = [Ps[i] * K[i] for i in range(len(Ts))]
     # Ps_consumed_TN = [Ps[i] * populate_correct_coef_energy_consum_warming_regime(Ts[i]) for i in range(len(Ts))]
     return Ps_consumed_TN
 
 
 def calc_Q_rob_TN():
-    Ts = tab5_gen_data[0]
-    Qs = tab5_gen_data[3]
+    # Ps = tab5_gen_data[2]
+    Q_Ps = calc_Qs_by_nasos()#todo
     K = calc_K_Qtn_koef()
-    print(len(K), len(Qs), len(Ts))
-    Qs_consumed_TN = [Qs[i] * K[i] for i in range(len(Ts))]
-    # Qs_consumed_TN = [Qs[i] * populate_correct_coef_teploprod(Ts[i]) for i in range(len(Ts))]
-    return Qs_consumed_TN
+    return [Q_Ps[i] * K[i] for i in range(len(Q_Ps))]
+    # Ts = tab5_gen_data[0]
+    # Qs = tab5_gen_data[3]
+    # K = calc_K_Qtn_koef()
+    # print(len(K), len(Qs), len(Ts))
+    # Qs_consumed_TN = [Qs[i] * K[i] for i in range(len(Ts))]
+    # # Qs_consumed_TN = [Qs[i] * populate_correct_coef_teploprod(Ts[i]) for i in range(len(Ts))]
+    # return Qs_consumed_TN
 
 
 # Визначитись з кількістю теплових насосів, режимом їх експлуатації та необхідності пікового догрівача.
 def calc_P_aux_warmer():
-    Qs = tab5_gen_data[3]
+    # Qs = tab5_gen_data[3]
+    # Ps = tab5_gen_data[2]
+    Ps = calc_Ps_by_nasos()
     Qs_rob = calc_Q_rob_TN()
     n_modules = data_service.get_tab5_n_modules()
-    P_aux_warmer = [(Qs[i] - Qs_rob[i] * n_modules) for i in range(len(Qs))]
+    P_aux_warmer = [(Ps[i] - Qs_rob[i] * n_modules)
+                    if (Ps[i] - Qs_rob[i] * n_modules) > 0
+                    else 0
+                    for i in range(len(Ps))]
+    print(P_aux_warmer)
     return P_aux_warmer
 
 
 def calc_K_zavant():
-    Qs = tab5_gen_data[3]
+    # Ps = tab5_gen_data[2]
+    Ps = calc_Ps_by_nasos() #teplovtrat
     Qs_rob = calc_Q_rob_TN()
     n_modules = data_service.get_tab5_n_modules()
     P_aux_warmer = calc_P_aux_warmer()
-    K_zavantazhenya = [float((Qs[i] - P_aux_warmer[i]) / Qs_rob[i] * n_modules) for i in range(len(Qs))]
+    K_zavantazhenya = [float(((Ps[i] - P_aux_warmer[i]) / (float(Qs_rob[i] * float(n_modules)))))
+                       # if P_aux_warmer[i] > 0
+                       # else 1
+                       for i in range(len(Ps))]
+
+    # print("K_Z_")
+    # [print("%.30f" % float(((Ps[i] - P_aux_warmer[i]) / (float(Qs_rob[i] * float(n_modules))))))
+     # if P_aux_warmer[i] > 0
+     # else 1
+     # for i in range(len(Ps))]
+    print("KZ", K_zavantazhenya)
     return K_zavantazhenya
+
+    # # Qs = tab5_gen_data[3]
+    # Ps = tab5_gen_data[2]
+    # Qs_rob = calc_Q_rob_TN()
+    # n_modules = data_service.get_tab5_n_modules()
+    # P_aux_warmer = calc_P_aux_warmer()
+    # K_zavantazhenya = [float(((Ps[i]-P_aux_warmer[i])/(float(Qs_rob[i]*float(n_modules))))) for i in range(len(Ps))]
+    # return K_zavantazhenya
 
 
 # 5.7. Визначити загальну фактичну потужність, що споживається всією системою генерування тепла з врахуванням додаткового догрівача для кожного температурного режиму.
@@ -177,10 +226,12 @@ def calc_P_cyrcyl_nasos_for_all():
 def calc_W_cons_TN():
     Q_tn = calc_Q_TN()
     return [Q_tn[i] / 3.5 for i in range(len(Q_tn))]
+
     # Hrs = tab5_gen_data[1]
     # P_aux_warmer_TN = calc_P_aux_warmer()
     # return [P_aux_warmer_TN[i] * Hrs[i]
     #         for i in range(len(Hrs))]
+
 
 # Q =t P N k , кВт год
 def calc_Q_aux_warmer():
@@ -242,13 +293,6 @@ def calc_SOR_syst():
 def calc_percanatage_tab5():
     sum_Q = calc_sum_Q()
 
-
-
-
-
-
-
-
 # ###Корекція теплопродуктивності
 # def populate_correct_coef_teploprod(t):
 #     if t < -15:
@@ -282,4 +326,3 @@ def calc_percanatage_tab5():
 #         return random.uniform(0.9, 1.2)
 #
 #
-# # todo import random as ahah)lol

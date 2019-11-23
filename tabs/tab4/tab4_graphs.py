@@ -53,10 +53,10 @@ def animate_4_2_graph(i):
         table_data = []
         for row_i in range(len(speed)):
             table_data.append([])
-            table_data[row_i].append(round(speed[row_i], 3))
-            table_data[row_i].append(round(dur[row_i], 3))
-            table_data[row_i].append(round(P[row_i], 3))
-            table_data[row_i].append(round(E[row_i], 3))
+            table_data[row_i].append(round(float(speed[row_i]), 3))
+            table_data[row_i].append(round(float(dur[row_i]), 3))
+            table_data[row_i].append(round(float(P[row_i]), 3))
+            table_data[row_i].append(round(float(E[row_i]), 3))
         # print(table_data)
 
         table = _4_2_graph_ax.table(cellText=table_data, loc='center', colLabels=["швидкість вітру, м/с",

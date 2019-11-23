@@ -64,6 +64,7 @@ class Application(tk.Tk):
 
                       tab5_graphs.Tab5Page,
                       tab5_graphs.GetInputTab5Frame,
+                      tab5_graphs.GetTN_Input,
                       tab5_graphs.Tab5Graph2,
                       tab5_graphs.Tab5Graph1
                       )
@@ -84,70 +85,70 @@ class Application(tk.Tk):
 if __name__ == '__main__':
     app = Application()
     app.geometry("1376x768")
-    temperature_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_graph_fig,
-                                                    tab1_graphs.animate_temperature_graph, interval=3000)
-    windrose_graph_ani = animation.FuncAnimation(tab1_graphs.windrose_graph_fig,
-                                                 tab1_graphs.animate_windrose_graph, interval=3000)
-    temperature_duration_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_regime_duration_graph_fig,
-                                                             tab1_graphs.animate_temperature_duration_graph,
-                                                             interval=3000)
-    wind_graph_ani = animation.FuncAnimation(tab1_graphs.wind_duration_graph_fig,
-                                             tab1_graphs.animate_wind_duration_graph, interval=3000)
-    solar_insolation_graph_ani = animation.FuncAnimation(tab1_graphs.solar_insolation_graph_fig,
-                                                         tab1_graphs.animate_insolation_graph, interval=3000)
-    solar_activity_duration_graph_ani = animation.FuncAnimation(tab1_graphs.solar_duration_graph_fig,
-                                                                tab1_graphs.animate_solar_activity_duration_graph,
-                                                                interval=3000)
+    # temperature_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_graph_fig,
+    #                                                 tab1_graphs.animate_temperature_graph, interval=3000)
+    # windrose_graph_ani = animation.FuncAnimation(tab1_graphs.windrose_graph_fig,
+    #                                              tab1_graphs.animate_windrose_graph, interval=3000)
+    # temperature_duration_graph_ani = animation.FuncAnimation(tab1_graphs.temperature_regime_duration_graph_fig,
+    #                                                          tab1_graphs.animate_temperature_duration_graph,
+    #                                                          interval=3000)
+    # wind_graph_ani = animation.FuncAnimation(tab1_graphs.wind_duration_graph_fig,
+    #                                          tab1_graphs.animate_wind_duration_graph, interval=3000)
+    # solar_insolation_graph_ani = animation.FuncAnimation(tab1_graphs.solar_insolation_graph_fig,
+    #                                                      tab1_graphs.animate_insolation_graph, interval=3000)
+    # solar_activity_duration_graph_ani = animation.FuncAnimation(tab1_graphs.solar_duration_graph_fig,
+    #                                                             tab1_graphs.animate_solar_activity_duration_graph,
+    #                                                             interval=3000)
 
     ####################################################################################################################
-    Q_waste_graph_ani = animation.FuncAnimation(tab3_graphs.Q_waste_graph_fig,
-                                                tab3_graphs.animate_Q_waste_graph,
-                                                interval=3000)
-    # prices_graph_ani = animation.FuncAnimation(tab3_graphs.prices_graph_fig,
-    #                                            tab3_graphs.animate_price_bar_graph,
-    #                                            interval=3000)
-    warmer_prices_graph_ani = animation.FuncAnimation(tab3_graphs.warmer_prices_graph_fig,
-                                                      tab3_graphs.animate_warmer_price_bar_graph,
-                                                      interval=3000)
+    # Q_waste_graph_ani = animation.FuncAnimation(tab3_graphs.Q_waste_graph_fig,
+    #                                             tab3_graphs.animate_Q_waste_graph,
+    #                                             interval=3000)
+    # # prices_graph_ani = animation.FuncAnimation(tab3_graphs.prices_graph_fig,
+    # #                                            tab3_graphs.animate_price_bar_graph,
+    # #                                            interval=3000)
+    # warmer_prices_graph_ani = animation.FuncAnimation(tab3_graphs.warmer_prices_graph_fig,
+    #                                                   tab3_graphs.animate_warmer_price_bar_graph,
+    #                                                   interval=3000)
 
     ####################################################################################################################
 
-    _2_1_1_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_1_graph_fig,
-                                               tab2_graphs.animate_2_1_1_graph,
-                                               interval=5000)
-
-    _2_1_2_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_2_graph_fig,
-                                               tab2_graphs.animate_2_1_2_graph,
-                                               interval=5000)
-
-    _2_1_3_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_3_graph_fig,
-                                               tab2_graphs.animate_2_1_3_graph,
-                                               interval=5000)
-
-    _2_1_4_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_4_graph_fig,
-                                               tab2_graphs.animate_2_1_4_graph,
-                                               interval=5000)
-
-    _2_1_5_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_5_graph_fig,
-                                               tab2_graphs.animate_2_1_5_graph,
-                                               interval=5000)
-    ##
-    _2_2_graph_ani = animation.FuncAnimation(tab2_graphs._2_2_graph_fig,
-                                               tab2_graphs.animate_2_2_graph,
-                                               interval=5000)
-    ##
-    _2_3_graph_ani = animation.FuncAnimation(tab2_graphs._2_3_graph_fig,
-                                               tab2_graphs.animate_2_3_graph,
-                                               interval=5000)
-
-
-    ############################################################################################
-    _4_1_graph_ani = animation.FuncAnimation(tab4_graphs._4_1_graph_fig,
-                                             tab4_graphs.animate_4_1_graph,
-                                             interval=5000)
-    _4_2_graph_ani = animation.FuncAnimation(tab4_graphs._4_2_graph_fig,
-                                             tab4_graphs.animate_4_2_graph,
-                                             interval=5000)
+    # _2_1_1_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_1_graph_fig,
+    #                                            tab2_graphs.animate_2_1_1_graph,
+    #                                            interval=5000)
+    #
+    # _2_1_2_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_2_graph_fig,
+    #                                            tab2_graphs.animate_2_1_2_graph,
+    #                                            interval=5000)
+    #
+    # _2_1_3_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_3_graph_fig,
+    #                                            tab2_graphs.animate_2_1_3_graph,
+    #                                            interval=5000)
+    #
+    # _2_1_4_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_4_graph_fig,
+    #                                            tab2_graphs.animate_2_1_4_graph,
+    #                                            interval=5000)
+    #
+    # _2_1_5_graph_ani = animation.FuncAnimation(tab2_graphs._2_1_5_graph_fig,
+    #                                            tab2_graphs.animate_2_1_5_graph,
+    #                                            interval=5000)
+    # ##
+    # _2_2_graph_ani = animation.FuncAnimation(tab2_graphs._2_2_graph_fig,
+    #                                            tab2_graphs.animate_2_2_graph,
+    #                                            interval=5000)
+    # ##
+    # _2_3_graph_ani = animation.FuncAnimation(tab2_graphs._2_3_graph_fig,
+    #                                            tab2_graphs.animate_2_3_graph,
+    #                                            interval=5000)
+    #
+    #
+    # ############################################################################################
+    # _4_1_graph_ani = animation.FuncAnimation(tab4_graphs._4_1_graph_fig,
+    #                                          tab4_graphs.animate_4_1_graph,
+    #                                          interval=7000)
+    # _4_2_graph_ani = animation.FuncAnimation(tab4_graphs._4_2_graph_fig,
+    #                                          tab4_graphs.animate_4_2_graph,
+    #                                          interval=6000)
 
     ############################################################################################
     _5_1_graph_ani = animation.FuncAnimation(tab5_graphs._5_1_graph_fig,
@@ -155,7 +156,7 @@ if __name__ == '__main__':
                                              interval=10000)
     _5_2_graph_ani = animation.FuncAnimation(tab5_graphs._5_2_graph_fig,
                                              tab5_graphs.animate_5_2_graph,
-                                             interval=9000)  #todo =-
+                                             interval=8000)  #todo =-
     app.mainloop()
 
 

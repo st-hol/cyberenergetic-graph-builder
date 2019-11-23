@@ -554,7 +554,7 @@ def set_tab4_data(h):
     set_tab4_tower_h(h)
 
 
-tower_h = 12
+tower_h = 10
 
 
 def get_tab4_tower_h():
@@ -620,10 +620,10 @@ def set_tab4_speed_dur(spd, dur):
 #############################    tab 5    #################################
 
 n_modules=1
-n_circ_nasos = 1
-n_funcoyles = 1
-power_circ_nasos = 10  # kWt
-power_funcoyles = 5  # kWt
+n_circ_nasos=1
+n_funcoyles=1
+power_circ_nasos=3  # kWt
+power_funcoyles=2  # kWt
 
 def get_tab5_n_modules():
     global n_modules
@@ -669,3 +669,31 @@ def set_tab5_data(n_modules, n_circ_nasos, n_funcoyles, power_circ_nasos, power_
 
 
 ####################################################################################
+active_tn_tab5 = "PUHZ-HRP71VHA"
+def get_active_nasos_tab5():
+    global active_tn_tab5
+    return active_tn_tab5
+
+def set_active_nasos_tab5(tn):
+    global active_tn_tab5
+    active_tn_tab5 = tn
+
+
+
+class TN:
+    def __init__(self, nom_tp, nom_p_tp, nom_hp, nom_p_hp):
+        self.nom_tp = nom_tp
+        self.nom_p_tp = nom_p_tp
+        self.nom_hp = nom_hp
+        self.nom_p_hp = nom_p_hp
+
+
+tn_map_tab5 = dict()
+tn_map_tab5["PUHZ-HRP71VHA"] = TN(8.0, 1.9, 7.1, 1.94)
+tn_map_tab5["PUHZ-HRP100VHA"] = TN(11.2, 2.54, 10.0, 2.44)
+tn_map_tab5["PUHZ-HRP100YHA"] = TN(11.2, 2.6, 10.0, 2.50)
+tn_map_tab5["PUHZ-HRP125YHA"] = TN(14.0, 3.52, 12.5, 3.79)
+
+def get_tn_map():
+    global tn_map_tab5
+    return tn_map_tab5
