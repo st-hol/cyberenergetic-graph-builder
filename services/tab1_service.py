@@ -4,7 +4,6 @@ import math
 from collections import Counter
 import pandas as pd
 import services.util_service as my_service
-import services.data_service as data_service
 
 # North - Northeast - East - Southeast - South - Southwest - West - Northwest
 # Север - Северо-Восток - Восток - Юго-Восток - Юг - Юго-Запад - Восток - Северо-Запад

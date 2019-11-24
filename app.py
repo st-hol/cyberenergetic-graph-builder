@@ -29,32 +29,32 @@ class Application(tk.Tk):
                       welcome.WelcomePage,
                       welcome.DataInfoPage,
 
-                      tab1_graphs.Tab1Page,
-                      tab1_graphs.GetInput1Frame,
-                      tab1_graphs.GetInput2Frame,
-                      tab1_graphs.Tab1Graph1_TemperatureCond,
-                      tab1_graphs.Tab1Graph2_TemperatureDuration,
-                      tab1_graphs.Tab1Graph3_WindRose,
-                      tab1_graphs.Tab1Graph4_WindDuration,
-                      tab1_graphs.Tab1Graph5_SolarInsolation,
-                      tab1_graphs.Tab1Graph6_SolarActivityDuration,
-
-                      tab2_graphs.Tab2Page,
-                      tab2_graphs.Tab2Graph1,
-                      tab2_graphs.Tab2Graph2,
-                      tab2_graphs.Tab2Graph3,
-                      tab2_graphs.Tab2Graph4,
-                      tab2_graphs.Tab2Graph5,
-                      tab2_graphs.GetInputTab2Frame,
-                      tab2_graphs.GetInputTimeUsageFrame,
-                      tab2_graphs.Tab2Graph6,
-                      tab2_graphs.Tab2Graph7,
-
-                      tab3_graphs.Tab3Page,
-                      tab3_graphs.GetInputTab3Frame,
-                      tab3_graphs.Tab3Graph1_Qwaste,
-                      tab3_graphs.Tab3Graph2_Prices,
-                      tab3_graphs.Tab3Graph3_WarmerPrices,
+                      # tab1_graphs.Tab1Page,
+                      # tab1_graphs.GetInput1Frame,
+                      # tab1_graphs.GetInput2Frame,
+                      # tab1_graphs.Tab1Graph1_TemperatureCond,
+                      # tab1_graphs.Tab1Graph2_TemperatureDuration,
+                      # tab1_graphs.Tab1Graph3_WindRose,
+                      # tab1_graphs.Tab1Graph4_WindDuration,
+                      # tab1_graphs.Tab1Graph5_SolarInsolation,
+                      # tab1_graphs.Tab1Graph6_SolarActivityDuration,
+                      #
+                      # tab2_graphs.Tab2Page,
+                      # tab2_graphs.Tab2Graph1,
+                      # tab2_graphs.Tab2Graph2,
+                      # tab2_graphs.Tab2Graph3,
+                      # tab2_graphs.Tab2Graph4,
+                      # tab2_graphs.Tab2Graph5,
+                      # tab2_graphs.GetInputTab2Frame,
+                      # tab2_graphs.GetInputTimeUsageFrame,
+                      # tab2_graphs.Tab2Graph6,
+                      # tab2_graphs.Tab2Graph7,
+                      #
+                      # tab3_graphs.Tab3Page,
+                      # tab3_graphs.GetInputTab3Frame,
+                      # tab3_graphs.Tab3Graph1_Qwaste,
+                      # tab3_graphs.Tab3Graph2_Prices,
+                      # tab3_graphs.Tab3Graph3_WarmerPrices,
 
                       tab4_graphs.Tab4Page,
                       tab4_graphs.Tab4Graph1,
@@ -62,11 +62,11 @@ class Application(tk.Tk):
                       tab4_graphs.GetInputTab4Frame,
                       tab4_graphs.GetInputTimeUsageFrame,
 
-                      tab5_graphs.Tab5Page,
-                      tab5_graphs.GetInputTab5Frame,
-                      tab5_graphs.GetTN_Input,
-                      tab5_graphs.Tab5Graph2,
-                      tab5_graphs.Tab5Graph1
+                      # tab5_graphs.Tab5Page,
+                      # tab5_graphs.GetInputTab5Frame,
+                      # tab5_graphs.GetTN_Input,
+                      # tab5_graphs.Tab5Graph2,
+                      # tab5_graphs.Tab5Graph1
                       )
         self.frames = {}
 
@@ -143,20 +143,20 @@ if __name__ == '__main__':
     #
     #
     # ############################################################################################
-    # _4_1_graph_ani = animation.FuncAnimation(tab4_graphs._4_1_graph_fig,
-    #                                          tab4_graphs.animate_4_1_graph,
-    #                                          interval=7000)
-    # _4_2_graph_ani = animation.FuncAnimation(tab4_graphs._4_2_graph_fig,
-    #                                          tab4_graphs.animate_4_2_graph,
-    #                                          interval=6000)
+    _4_1_graph_ani = animation.FuncAnimation(tab4_graphs._4_1_graph_fig,
+                                             tab4_graphs.animate_4_1_graph,
+                                             interval=7000)
+    _4_2_graph_ani = animation.FuncAnimation(tab4_graphs._4_2_graph_fig,
+                                             tab4_graphs.animate_4_2_graph,
+                                             interval=6000)
 
     ############################################################################################
-    _5_1_graph_ani = animation.FuncAnimation(tab5_graphs._5_1_graph_fig,
-                                             tab5_graphs.animate_5_1_graph,
-                                             interval=10000)
-    _5_2_graph_ani = animation.FuncAnimation(tab5_graphs._5_2_graph_fig,
-                                             tab5_graphs.animate_5_2_graph,
-                                             interval=8000)  #todo =-
+    # _5_1_graph_ani = animation.FuncAnimation(tab5_graphs._5_1_graph_fig,
+    #                                          tab5_graphs.animate_5_1_graph,
+    #                                          interval=10000)
+    # _5_2_graph_ani = animation.FuncAnimation(tab5_graphs._5_2_graph_fig,
+    #                                          tab5_graphs.animate_5_2_graph,
+    #                                          interval=8000)  #todo =-
     app.mainloop()
 
 

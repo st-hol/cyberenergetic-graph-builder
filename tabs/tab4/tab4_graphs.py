@@ -8,7 +8,8 @@ import tabs.router_page as router
 import services.data_service as data_service
 import services.tab4_service as tab4_service
 
-import services.util_service as my_service
+import matplotlib.pyplot as plt
+import numpy as np
 
 # 4_1
 _4_1_graph_fig = Figure()
@@ -22,15 +23,26 @@ def animate_4_1_graph(i):
         map_tab4 = tab4_service.reform_standard_speed_w_map_for_new_h()
         xs = list(map_tab4.keys())
         ys = list(map_tab4.values())
+        xs = [int(x) for x in xs]
+        ys = [float(y) for y in ys]
         _4_1_graph_ax.clear()
         # _4_1_graph_ax.axis('equal')
+
+        # # make the y ticks integers, not floats
+        # yint = []
+        # locs, labels = plt.yticks()
+        # for each in locs:
+        #     yint.append(int(each))
+        # plt.yticks(yint)
+
         _4_1_graph_ax.set(xlabel='w, (м/с)', ylabel='W, кВт',
                           title='Енергетична характеристика ВЕУ')
         _4_1_graph_ax.grid()
         _4_1_graph_ax.plot(xs, ys,
                            linestyle='-', linewidth='1',
-                           markersize=5,
+                           markersize=5, marker='o',
                            label="t ℃ ")
+        plt.yticks(np.arange(min(ys), max(ys) + 1, 1.0))
 
 
 # 4_2
@@ -43,12 +55,17 @@ def animate_4_2_graph(i):
     print("animate active is ", is_active)
     if is_active == "4_2":
         map_tab4 = tab4_service.reform_standard_speed_w_map_for_new_h()
-        speed = list(map_tab4.keys())
-        dur = list(data_service.get_tab4_map_speed_dur().values())
-        P = list(map_tab4.values())
-        E = tab4_service.calc_energy_tab4(map_tab4)
+        # speed = list(map_tab4.keys())
+        # dur = list(data_service.get_tab4_map_speed_dur().values()) #todo
+        # P = list(map_tab4.values())
+        # E = tab4_service.calc_energy_tab4(map_tab4)
 
-        # print("LLL:", len(speed), len(dur), len(P), len(E))
+        tab4_data = tab4_service.get_tab4_data_full()
+        speed = list(tab4_data.speed_list)
+        dur = list(tab4_data.duration_list)
+        P = list(tab4_data.p_list)
+        E = list(tab4_data.e_list)
+        print("LLL:", len(speed), len(dur), len(P), len(E))
 
         table_data = []
         for row_i in range(len(speed)):
@@ -72,9 +89,9 @@ def animate_4_2_graph(i):
             cell.set_linewidth(0.5)
 
         table_data1 = [
-            ["Всього енергії вироблено", "%.4f" % tab4_service.calc_sum_energy_tab4(map_tab4) + " кВт*год"],
-            ["Дохід від продажу електричної енергії за «зеленим» тарифом", "%.4f" % tab4_service.calc_tab4_income_from_sell_energy(map_tab4) + " €"],
-            ["Дохід від продажу одиниць скорочення викидів (ОСВ)", "%.4f" % tab4_service.calc_tab4_income_from_OSV(map_tab4) + " €"]
+            ["Всього енергії вироблено", "%6.2f" % tab4_service.calc_sum_energy_tab4(map_tab4) + " кВт*год"],
+            ["Дохід від продажу електричної енергії за «зеленим» тарифом", "%.0f" % tab4_service.calc_tab4_income_from_sell_energy(map_tab4) + " €"],
+            ["Дохід від продажу одиниць скорочення викидів (ОСВ)", "%.0f" % tab4_service.calc_tab4_income_from_OSV(map_tab4) + " €"]
         ]
         table1 = _4_2_graph_ax.table(cellText=table_data1, loc='bottom', cellLoc='center')
 

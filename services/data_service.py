@@ -6,6 +6,7 @@ import re
 
 import services.tab4_service as tab4_service
 import services.tab2_service as tab2_service
+import services.tab1_service as tab1_service
 import services.util_service as util_service
 
 
@@ -567,10 +568,28 @@ def set_tab4_tower_h(s):
     tower_h = int(s)
 
 
-
 # tab4_time_dur_for_speed = [0 for i in range(int(len(dirty)/2))]
 # tab4_time_dur_for_speed
-tab4_map_speed_dur = {i: 20 for i in range(int(len(tab4_service.dirty)/2))}  # todo input
+
+
+def populate_speed_dur_map():
+    tab4_map_speed_dur = {i: 0 for i in range(int(len(tab4_service.dirty) / 2))}  # todo input
+    update_all_data_map(get_start_date(), get_end_date())
+    all_data_map = get_all_data_map()
+    map_t_freq = tab1_service.map_wind_duration(all_data_map)
+    for k, v in map_t_freq.items():
+        try:
+            if k >= 0:
+                tab4_map_speed_dur[k] = v
+            else:
+                continue
+        except KeyError:
+            continue
+    return tab4_map_speed_dur
+
+
+tab4_map_speed_dur = populate_speed_dur_map()
+
 
 def get_tab4_map_speed_dur():
     global tab4_map_speed_dur
